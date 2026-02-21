@@ -1,0 +1,79 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-application-name-from-alatele2-to-alatele-in-the-header-component-and-all-ui-facing-locations",
+      "featureTitle": "Update the application name from 'Alatele2' to 'Alatele' in the Header component and all UI-facing locations",
+      "files": [
+        "frontend/src/components/Header.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-delete-button-to-each-message-that-allows-users-to-delete-their-own-messages",
+      "featureTitle": "Add a delete button to each message that allows users to delete their own messages",
+      "files": [
+        "frontend/src/components/MessageList.tsx",
+        "frontend/src/hooks/useMessages.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-an-edit-button-to-each-message-that-allows-users-to-edit-their-own-messages",
+      "featureTitle": "Add an edit button to each message that allows users to edit their own messages",
+      "files": [
+        "frontend/src/components/MessageList.tsx",
+        "frontend/src/hooks/useMessages.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-react-query-hooks-for-delete-and-edit-message-operations-with-automatic-cache-invalidation",
+      "featureTitle": "Create React Query hooks for delete and edit message operations with automatic cache invalidation",
+      "files": [
+        "frontend/src/hooks/useMessages.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

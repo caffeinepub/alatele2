@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        --background: 0.98 0 0;
+        --foreground: 0.15 0 0;
+        --card: 1 0 0;
+        --card-foreground: 0.15 0 0;
+        --popover: 1 0 0;
+        --popover-foreground: 0.15 0 0;
+        --primary: 0.45 0.15 145;
+        --primary-foreground: 0.99 0 0;
+        --secondary: 0.96 0.01 85;
+        --secondary-foreground: 0.15 0 0;
+        --muted: 0.96 0.01 85;
+        --muted-foreground: 0.50 0.02 85;
+        --accent: 0.92 0.03 85;
+        --accent-foreground: 0.15 0 0;
+        --destructive: 0.55 0.22 25;
+        --destructive-foreground: 0.99 0 0;
+        --border: 0.90 0.01 85;
+        --input: 0.90 0.01 85;
+        --ring: 0.45 0.15 145;
+        --chart-1: 0.60 0.18 145;
+        --chart-2: 0.65 0.15 85;
+        --chart-3: 0.55 0.12 200;
+        --chart-4: 0.70 0.16 60;
+        --chart-5: 0.50 0.20 320;
+    }
+
+    .dark {
+        --background: 0.12 0.01 145;
+        --foreground: 0.98 0.01 85;
+        --card: 0.16 0.01 145;
+        --card-foreground: 0.98 0.01 85;
+        --popover: 0.14 0.01 145;
+        --popover-foreground: 0.98 0.01 85;
+        --primary: 0.65 0.18 145;
+        --primary-foreground: 0.12 0.01 145;
+        --secondary: 0.22 0.02 145;
+        --secondary-foreground: 0.98 0.01 85;
+        --muted: 0.22 0.02 145;
+        --muted-foreground: 0.60 0.02 85;
+        --accent: 0.28 0.03 145;
+        --accent-foreground: 0.98 0.01 85;
+        --destructive: 0.60 0.20 25;
+        --destructive-foreground: 0.98 0 0;
+        --border: 0.25 0.02 145;
+        --input: 0.25 0.02 145;
+        --ring: 0.65 0.18 145;
+        --chart-1: 0.60 0.18 145;
+        --chart-2: 0.65 0.15 85;
+        --chart-3: 0.55 0.12 200;
+        --chart-4: 0.70 0.16 60;
+        --chart-5: 0.50 0.20 320;
+    }
+
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+}

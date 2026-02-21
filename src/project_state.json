@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "A simple messaging app called 'alatele' with Greek alpha symbol (α) as icon/image. Users enter with a random username (no authentication). Users can delete and edit their messages.",
+  "architectural_notes": [
+    "Web-based messaging application",
+    "No authentication system - users enter with random usernames",
+    "Greek alpha (α) symbol used as branding/icon",
+    "Users can delete and edit their own messages"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-username-entry-screen-where-users-can-type-any-random-username-to-enter-the-messaging-app-without-authentication",
+      "title": "Create a username entry screen where users can type any random username to enter the messaging app without authentication",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-simple-messaging-interface-where-users-can-send-and-receive-messages-in-real-time",
+      "title": "Build a simple messaging interface where users can send and receive messages in real-time",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-the-alpha-symbol-as-a-prominent-icon-or-logo-in-the-app-interface",
+      "title": "Display the alpha symbol (α) as a prominent icon or logo in the app interface",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-clean-minimalist-design-theme-with-modern-typography-and-cohesive-color-palette-suitable-for-a-messaging-application",
+      "title": "Apply a clean, minimalist design theme with modern typography and cohesive color palette suitable for a messaging application",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-the-generated-alpha-symbol-image-as-a-static-asset-in-frontend-public-assets-generated",
+      "title": "Render the generated alpha symbol image as a static asset in frontend/public/assets/generated",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-application-name-from-alatele2-to-alatele-in-the-header-component-and-all-ui-facing-locations",
+      "title": "Update the application name from 'Alatele2' to 'Alatele' in the Header component and all UI-facing locations",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-delete-button-to-each-message-that-allows-users-to-delete-their-own-messages",
+      "title": "Add a delete button to each message that allows users to delete their own messages",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-edit-button-to-each-message-that-allows-users-to-edit-their-own-messages",
+      "title": "Add an edit button to each message that allows users to edit their own messages",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hooks-for-delete-and-edit-message-operations-with-automatic-cache-invalidation",
+      "title": "Create React Query hooks for delete and edit message operations with automatic cache invalidation",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Build simple messaging interface",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add alpha symbol (α) as app icon/image",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Implement random username entry for login",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Create backend storage for messages with username, content, and timestamp fields",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add ability for users to delete their own messages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add ability for users to edit their own messages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Extend the backend Message type to include a unique message ID field for identifying individual messages",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Implement backend functions for deleting a message by ID and editing a message's content by ID",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "alatele2",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,86 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add message edit and delete features, rename app to Alatele",
+  "requirements": [
+    {
+      "id": "REQ-7",
+      "summary": "Update the application name from 'Alatele2' to 'Alatele' in the Header component and all UI-facing locations",
+      "acceptanceCriteria": [
+        "The header displays 'Alatele' instead of 'Alatele2'",
+        "All user-visible references to the app name are updated to 'Alatele'"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Change the app title text from 'Alatele2' to 'Alatele' in the header component"
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Add a delete button to each message that allows users to delete their own messages",
+      "acceptanceCriteria": [
+        "A delete button appears on messages sent by the current user",
+        "Clicking the delete button removes the message from the message list",
+        "The message is permanently deleted from backend storage",
+        "Other users cannot see deleted messages after refresh",
+        "Users cannot delete messages sent by other users"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MessageList.tsx",
+          "operation": "modify",
+          "description": "Add a delete button that appears only on messages sent by the current user. The button should call the useDeleteMessage hook with the message ID. Only show the delete button when the message sender matches the current username prop."
+        },
+        {
+          "path": "frontend/src/hooks/useMessages.ts",
+          "operation": "modify",
+          "description": "Add a useDeleteMessage mutation hook that calls the backend deleteMessage function with the message ID and invalidates the messages query cache on success. Handle loading and error states appropriately."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Add an edit button to each message that allows users to edit their own messages",
+      "acceptanceCriteria": [
+        "An edit button appears on messages sent by the current user",
+        "Clicking the edit button enables inline editing of the message content",
+        "Users can save the edited message or cancel the edit",
+        "The edited message is updated in backend storage",
+        "Other users see the updated message content after refresh",
+        "Users cannot edit messages sent by other users"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MessageList.tsx",
+          "operation": "modify",
+          "description": "Add an edit button that appears only on messages sent by the current user. Clicking the edit button should toggle inline editing mode for that message, showing a textarea with the current content and save/cancel buttons. The save button should call the useEditMessage hook with the message ID and new content. Only show the edit button when the message sender matches the current username prop."
+        },
+        {
+          "path": "frontend/src/hooks/useMessages.ts",
+          "operation": "modify",
+          "description": "Add a useEditMessage mutation hook that calls the backend editMessage function with the message ID and new content, and invalidates the messages query cache on success. Handle loading and error states appropriately."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Create React Query hooks for delete and edit message operations with automatic cache invalidation",
+      "acceptanceCriteria": [
+        "A useDeleteMessage hook calls the backend delete function and invalidates the messages query",
+        "A useEditMessage hook calls the backend edit function and invalidates the messages query",
+        "Both hooks handle loading and error states appropriately",
+        "The message list refreshes automatically after successful operations"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useMessages.ts",
+          "operation": "modify",
+          "description": "Export useDeleteMessage and useEditMessage mutation hooks using React Query's useMutation. Both hooks should use the backend actor from useActor, call the respective backend functions (deleteMessage and editMessage), and invalidate the 'messages' query key on success to trigger automatic refetch. Include proper error handling and loading states."
+        }
+      ]
+    }
+  ]
+}
