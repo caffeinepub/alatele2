@@ -4,15 +4,30 @@ import Array "mo:core/Array";
 import Text "mo:core/Text";
 import Order "mo:core/Order";
 import Runtime "mo:core/Runtime";
+import Storage "blob-storage/Storage";
 import Iter "mo:core/Iter";
 import Nat "mo:core/Nat";
+import Migration "migration";
+import MixinStorage "blob-storage/Mixin";
 
+(with migration = Migration.run)
 actor {
+  include MixinStorage();
+
   type Message = {
     id : Nat;
     sender : Text;
     content : Text;
+    image : ?Storage.ExternalBlob;
+    video : ?Storage.ExternalBlob;
     timestamp : Time.Time;
+  };
+
+  type MessageInput = {
+    sender : Text;
+    content : Text;
+    image : ?Storage.ExternalBlob;
+    video : ?Storage.ExternalBlob;
   };
 
   module Message {
@@ -24,13 +39,15 @@ actor {
   var nextMessageId = 0;
   let messagesStore = Map.empty<Nat, Message>();
 
-  public shared ({ caller }) func sendMessage(sender : Text, content : Text) : async () {
+  public shared ({ caller }) func sendMessage(data : MessageInput) : async () {
     let timestamp = Time.now();
     let message : Message = {
       id = nextMessageId;
-      sender;
-      content;
       timestamp;
+      sender = data.sender;
+      content = data.content;
+      image = data.image;
+      video = data.video;
     };
     messagesStore.add(nextMessageId, message);
     nextMessageId += 1;

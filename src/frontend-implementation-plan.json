@@ -1,71 +1,89 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove subscription and make app completely free for all users",
+  "title": "Add image and video sending to messenger",
   "requirements": [
     {
-      "id": "REQ-13",
-      "summary": "Remove any subscription, payment, or premium tier UI elements from all frontend components",
+      "id": "REQ-7",
+      "summary": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
       "acceptanceCriteria": [
-        "No subscription prompts, payment buttons, or premium feature locks are visible in the UI",
-        "All messaging features remain accessible without any payment gates"
+        "File input button or drag-drop area for selecting images",
+        "Preview of selected image before sending",
+        "Ability to remove selected image before sending",
+        "Image uploads integrated with existing send message flow"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Review and remove any subscription or payment-related UI elements, state management, or conditional rendering based on subscription status from the root component"
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Remove any subscription badges, premium indicators, or upgrade buttons from the header component"
-        },
-        {
-          "path": "frontend/src/components/MessagingInterface.tsx",
-          "operation": "modify",
-          "description": "Remove any subscription prompts, payment gates, or premium feature locks from the main messaging interface"
-        },
-        {
           "path": "frontend/src/components/MessageInput.tsx",
           "operation": "modify",
-          "description": "Remove any message sending limits, premium feature checks, or subscription prompts that gate message input functionality"
-        },
-        {
-          "path": "frontend/src/components/MessageList.tsx",
-          "operation": "modify",
-          "description": "Remove any subscription-based restrictions on message editing or deletion, ensuring all users can edit and delete their own messages without limitations"
-        },
-        {
-          "path": "frontend/src/components/UsernameEntry.tsx",
-          "operation": "modify",
-          "description": "Remove any subscription tier selection, payment prompts, or premium account creation options from the username entry screen"
+          "description": "Add image file upload functionality with file input control, preview display, and remove capability. Use the blob-storage component to handle image files via ExternalBlob.fromBytes() and withUploadProgress() for tracking upload progress. Verify the component's usage instructions before implementing. Integrate image attachment with existing send message flow to pass image data to the backend."
         }
       ]
     },
     {
-      "id": "REQ-15",
-      "summary": "Ensure all messaging features (send, edit, delete) are available to all users without any restrictions",
+      "id": "REQ-8",
+      "summary": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
       "acceptanceCriteria": [
-        "Every user can send unlimited messages",
-        "Every user can edit and delete their own messages without restrictions",
-        "No usage limits or feature gates are enforced"
+        "File input button or drag-drop area for selecting videos",
+        "Preview or filename display of selected video before sending",
+        "Ability to remove selected video before sending",
+        "Video uploads integrated with existing send message flow"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MessageInput.tsx",
+          "operation": "modify",
+          "description": "Add video file upload functionality with file input control, filename or preview display, and remove capability. Use the blob-storage component to handle video files via ExternalBlob.fromBytes() and withUploadProgress() for tracking upload progress. Verify the component's usage instructions before implementing. Integrate video attachment with existing send message flow to pass video data to the backend."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Update MessageList component to display embedded images in messages when present",
+      "acceptanceCriteria": [
+        "Messages containing images show the image inline",
+        "Images are properly sized and responsive",
+        "Images can be clicked to view full size",
+        "Text and images display together when both are present"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MessageList.tsx",
+          "operation": "modify",
+          "description": "Add inline image rendering for messages with image field. Use ExternalBlob.getDirectURL() method from the blob-storage component to display images efficiently with streaming and caching. Verify the component's usage instructions before implementing. Implement responsive sizing, clickable full-size view, and ensure text and images display together when both are present in a message."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Update MessageList component to display embedded videos in messages when present with playback controls",
+      "acceptanceCriteria": [
+        "Messages containing videos show a video player inline",
+        "Video player includes standard controls (play, pause, volume, fullscreen)",
+        "Videos are properly sized and responsive",
+        "Text and videos display together when both are present"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MessageList.tsx",
+          "operation": "modify",
+          "description": "Add inline video player rendering for messages with video field. Use ExternalBlob.getDirectURL() method from the blob-storage component to display videos efficiently with streaming and caching. Verify the component's usage instructions before implementing. Include standard HTML5 video controls (play, pause, volume, fullscreen), implement responsive sizing, and ensure text and videos display together when both are present in a message."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
+      "acceptanceCriteria": [
+        "useSendMessage hook accepts image and video file parameters",
+        "Message queries return image and video data when present",
+        "Client-side type definitions include image and video fields"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useMessages.ts",
           "operation": "modify",
-          "description": "Remove any subscription validation, usage limit checks, or premium feature guards from the message operation hooks (send, edit, delete)"
-        },
-        {
-          "path": "frontend/src/components/MessageInput.tsx",
-          "operation": "modify",
-          "description": "Ensure the message input component allows unlimited message sending without any subscription checks or usage counters"
-        },
-        {
-          "path": "frontend/src/components/MessageList.tsx",
-          "operation": "modify",
-          "description": "Ensure edit and delete actions are available for all users on their own messages without any subscription or premium tier validation"
+          "description": "Update useSendMessage mutation to accept optional image and video parameters of type ExternalBlob from the blob-storage component. Verify the component's usage instructions before implementing. Ensure MessageInput type includes optional image and video fields and that these fields are properly passed to the backend sendMessage function. Message fetch operations already receive image and video data from the backend interface, ensure proper handling and type safety."
         }
       ]
     }

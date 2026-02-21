@@ -1,71 +1,170 @@
 {
   "kind": "build_request",
-  "title": "Remove subscription and make app completely free for all users",
+  "title": "Add image and video sending to messenger",
   "projectName": "Alatele",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-13",
-      "text": "Remove any subscription, payment, or premium tier UI elements from all frontend components",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-final"
-        ],
-        "quotes": [
-          "اشتراک را بردار و کلا رایگان کن برای همه"
-        ]
-      },
-      "acceptanceCriteria": [
-        "No subscription prompts, payment buttons, or premium feature locks are visible in the UI",
-        "All messaging features remain accessible without any payment gates"
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "text": "Remove any subscription or payment-related backend logic, data models, and API endpoints",
+      "id": "REQ-4",
+      "text": "Extend the backend Message type to include optional image and video file data fields that can store media content alongside text",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-final"
         ],
         "quotes": [
-          "اشتراک را بردار و کلا رایگان کن برای همه"
+          "به پیام رسانم بجز فرستادن متن فرستادن عکس و فیلم را اضافه کن"
         ]
       },
       "acceptanceCriteria": [
-        "No subscription state or payment tracking exists in the backend data models",
-        "All users have equal access to all messaging functionality without subscription checks"
+        "Message type supports optional image field",
+        "Message type supports optional video field",
+        "Existing text messages remain compatible",
+        "Media files are stored as Blob data type"
       ]
     },
     {
-      "id": "REQ-15",
-      "text": "Ensure all messaging features (send, edit, delete) are available to all users without any restrictions",
-      "target": "both",
+      "id": "REQ-5",
+      "text": "Update the send message API to accept and store image files when users upload them",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-final"
         ],
         "quotes": [
-          "اشتراک را بردار و کلا رایگان کن برای همه"
+          "فرستادن عکس"
         ]
       },
       "acceptanceCriteria": [
-        "Every user can send unlimited messages",
-        "Every user can edit and delete their own messages without restrictions",
-        "No usage limits or feature gates are enforced"
+        "Backend accepts image uploads in common formats (JPEG, PNG, GIF, WebP)",
+        "Images are stored with the message record",
+        "Image data is retrievable when fetching messages"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Update the send message API to accept and store video files when users upload them",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "فیلم را اضافه کن"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend accepts video uploads in common formats (MP4, WebM)",
+        "Videos are stored with the message record",
+        "Video data is retrievable when fetching messages"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "فرستادن عکس"
+        ]
+      },
+      "acceptanceCriteria": [
+        "File input button or drag-drop area for selecting images",
+        "Preview of selected image before sending",
+        "Ability to remove selected image before sending",
+        "Image uploads integrated with existing send message flow"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "فیلم را اضافه کن"
+        ]
+      },
+      "acceptanceCriteria": [
+        "File input button or drag-drop area for selecting videos",
+        "Preview or filename display of selected video before sending",
+        "Ability to remove selected video before sending",
+        "Video uploads integrated with existing send message flow"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Update MessageList component to display embedded images in messages when present",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "فرستادن عکس"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Messages containing images show the image inline",
+        "Images are properly sized and responsive",
+        "Images can be clicked to view full size",
+        "Text and images display together when both are present"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Update MessageList component to display embedded videos in messages when present with playback controls",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "فیلم را اضافه کن"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Messages containing videos show a video player inline",
+        "Video player includes standard controls (play, pause, volume, fullscreen)",
+        "Videos are properly sized and responsive",
+        "Text and videos display together when both are present"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "به پیام رسانم بجز فرستادن متن فرستادن عکس و فیلم را اضافه کن"
+        ]
+      },
+      "acceptanceCriteria": [
+        "useSendMessage hook accepts image and video file parameters",
+        "Message queries return image and video data when present",
+        "Client-side type definitions include image and video fields"
       ]
     }
   ],
   "constraints": [
-    "Preserve existing username entry and messaging functionality",
-    "Do not modify the single-actor backend architecture",
-    "Do not change frontend/src/hooks/useInternetIdentity.ts or other immutable paths"
+    "Maintain backward compatibility with existing text-only messages",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui",
+    "Keep all backend logic in the single main.mo actor file"
   ],
   "nonGoals": [
-    "Adding authentication or user accounts",
-    "Implementing new messaging features beyond removal of restrictions",
-    "Changing the visual design or branding"
+    "Real-time video streaming or live chat features",
+    "Video compression or transcoding on upload",
+    "Advanced image editing capabilities",
+    "Third-party media hosting integrations",
+    "Thumbnail generation for videos"
   ],
   "imageRequirements": {
     "required": [],

@@ -1,4 +1,100 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-add-file-upload-controls-to-messageinput-component-allowing-users-to-select-and-attach-images-before-sending",
+      "featureTitle": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
+      "files": [
+        "frontend/src/components/MessageInput.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-file-upload-controls-to-messageinput-component-allowing-users-to-select-and-attach-videos-before-sending",
+      "featureTitle": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
+      "files": [
+        "frontend/src/components/MessageInput.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-messagelist-component-to-display-embedded-images-in-messages-when-present",
+      "featureTitle": "Update MessageList component to display embedded images in messages when present",
+      "files": [
+        "frontend/src/components/MessageList.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-messagelist-component-to-display-embedded-videos-in-messages-when-present-with-playback-controls",
+      "featureTitle": "Update MessageList component to display embedded videos in messages when present with playback controls",
+      "files": [
+        "frontend/src/components/MessageList.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-usemessages-hooks-to-handle-image-and-video-data-in-send-edit-and-fetch-operations",
+      "featureTitle": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
+      "files": [
+        "frontend/src/hooks/useMessages.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

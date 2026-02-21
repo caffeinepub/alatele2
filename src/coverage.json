@@ -1,54 +1,111 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T11:36:21.126Z",
+  "generatedAt": "2026-02-21T14:26:17.595Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 0,
+    "total": 8,
+    "implemented": 5,
     "items": [
       {
-        "id": "REQ-13",
-        "summary": "Remove any subscription, payment, or premium tier UI elements from all frontend components",
-        "status": "missing",
+        "id": "REQ-10",
+        "summary": "Update MessageList component to display embedded videos in messages when present with playback controls",
+        "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/components/Header.tsx",
-          "frontend/src/components/MessagingInterface.tsx",
-          "frontend/src/components/MessageInput.tsx",
-          "frontend/src/components/MessageList.tsx",
-          "frontend/src/components/UsernameEntry.tsx"
+          "frontend/src/components/MessageList.tsx"
         ],
-        "matchedFiles": []
+        "matchedFiles": [
+          "frontend/src/components/MessageList.tsx"
+        ]
       },
       {
-        "id": "REQ-14",
-        "summary": "Remove any subscription or payment-related backend logic, data models, and API endpoints",
+        "id": "REQ-11",
+        "summary": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useMessages.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useMessages.ts"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Extend the backend Message type to include optional image and video file data fields that can store media content alongside text",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-15",
-        "summary": "Ensure all messaging features (send, edit, delete) are available to all users without any restrictions",
-        "status": "missing",
+        "id": "REQ-5",
+        "summary": "Update the send message API to accept and store image files when users upload them",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Update the send message API to accept and store video files when users upload them",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
+        "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useMessages.ts",
-          "frontend/src/components/MessageInput.tsx",
+          "frontend/src/components/MessageInput.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/MessageInput.tsx"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/MessageInput.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/MessageInput.tsx"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Update MessageList component to display embedded images in messages when present",
+        "status": "implemented",
+        "plannedFiles": [
           "frontend/src/components/MessageList.tsx"
         ],
-        "matchedFiles": []
+        "matchedFiles": [
+          "frontend/src/components/MessageList.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
+    "backend/blob-storage/Mixin.mo",
+    "backend/blob-storage/Storage.mo",
     "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
+    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/MessageInput.tsx",
+    "frontend/src/components/MessageList.tsx",
+    "frontend/src/components/MessagingInterface.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useMessages.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

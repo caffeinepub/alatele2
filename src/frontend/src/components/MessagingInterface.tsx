@@ -4,6 +4,7 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useMessages } from '../hooks/useMessages';
 import { Loader2 } from 'lucide-react';
+import { ExternalBlob } from '../backend';
 
 interface MessagingInterfaceProps {
   username: string;
@@ -22,8 +23,8 @@ export default function MessagingInterface({ username, onLogout }: MessagingInte
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async (content: string) => {
-    await sendMessage(username, content);
+  const handleSendMessage = async (content: string, image?: ExternalBlob, video?: ExternalBlob) => {
+    await sendMessage(username, content, image, video);
   };
 
   return (

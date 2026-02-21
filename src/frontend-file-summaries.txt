@@ -1,11 +1,11 @@
 {
   "frontend/src/App.tsx": "Main application component that manages username state and conditionally renders either the username entry screen or the messaging interface based on session storage.",
   "frontend/src/components/UsernameEntry.tsx": "Username entry form component with alpha logo branding that allows users to enter any username to join the chat without authentication.",
-  "frontend/src/components/MessagingInterface.tsx": "Main messaging interface component that orchestrates the header, message list, message input, and footer with real-time message polling.",
+  "frontend/src/components/MessagingInterface.tsx": "Main messaging interface component that orchestrates the header, message list, message input with image/video support, and footer with real-time message polling and auto-scroll.",
   "frontend/src/components/Header.tsx": "Header component displaying the alpha logo, app name \"Alatele\", current username, and logout button.",
-  "frontend/src/components/MessageList.tsx": "Message list component that renders all chat messages with avatars, timestamps, and edit/delete buttons for the current user's own messages with inline editing functionality.",
-  "frontend/src/components/MessageInput.tsx": "Message input component with textarea and send button that handles message submission with keyboard shortcuts (Enter to send, Shift+Enter for new line).",
-  "frontend/src/hooks/useMessages.ts": "Custom React Query hooks that manage message fetching with 2-second polling, message sending, editing, and deleting mutations with automatic cache invalidation.",
+  "frontend/src/components/MessageList.tsx": "Message list component that renders chat messages with avatars, timestamps, inline image display with click-to-enlarge dialog, inline video player with controls, and edit/delete buttons for the current user's messages.",
+  "frontend/src/components/MessageInput.tsx": "Message input component with textarea, send button, and file upload controls for images and videos with preview display, progress tracking, and integrated send flow using ExternalBlob from blob-storage.",
+  "frontend/src/hooks/useMessages.ts": "Custom React Query hooks that manage message fetching with 2-second polling, message sending with support for optional image and video ExternalBlob attachments, and message editing/deleting mutations with automatic cache invalidation.",
   "frontend/src/lib/utils.ts": "Utility functions including the cn() helper for merging Tailwind CSS classes with clsx and tailwind-merge.",
   "frontend/src/index.css": "Global styles with OKLCH color system defining a teal/cyan-based color palette for both light and dark modes, avoiding blue and purple tones.",
   "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens mapped to OKLCH CSS variables and extended theme settings for the messaging app design system."

@@ -3,6 +3,7 @@ import { type Message } from '../backend';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { Pencil, Trash2, Check, X } from 'lucide-react';
 import { useDeleteMessage, useEditMessage } from '../hooks/useMessages';
@@ -81,6 +82,8 @@ export default function MessageList({ messages, currentUsername }: MessageListPr
       {messages.map((message, index) => {
         const isOwnMessage = message.sender === currentUsername;
         const isEditing = editingMessageId === message.id;
+        const hasImage = !!message.image;
+        const hasVideo = !!message.video;
         
         return (
           <div
@@ -149,14 +152,51 @@ export default function MessageList({ messages, currentUsername }: MessageListPr
               ) : (
                 <>
                   <div className={cn(
-                    'rounded-2xl px-4 py-2.5 break-words',
+                    'rounded-2xl overflow-hidden',
                     isOwnMessage 
                       ? 'bg-primary text-primary-foreground rounded-tr-sm' 
                       : 'bg-muted rounded-tl-sm'
                   )}>
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                      {message.content}
-                    </p>
+                    {/* Image Display */}
+                    {hasImage && message.image && (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <img
+                            src={message.image.getDirectURL()}
+                            alt="Shared image"
+                            className="max-w-full max-h-80 object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                          />
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl w-auto p-0 border-0">
+                          <img
+                            src={message.image.getDirectURL()}
+                            alt="Shared image"
+                            className="w-full h-auto"
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    )}
+
+                    {/* Video Display */}
+                    {hasVideo && message.video && (
+                      <video
+                        src={message.video.getDirectURL()}
+                        controls
+                        className="max-w-full max-h-80 rounded"
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
+
+                    {/* Text Content */}
+                    {message.content && (
+                      <div className="px-4 py-2.5">
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                      </div>
+                    )}
                   </div>
                   
                   {isOwnMessage && (
