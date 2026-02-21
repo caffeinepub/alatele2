@@ -14,6 +14,7 @@ export type ExternalBlob = Uint8Array;
 export interface Message {
   'id' : bigint,
   'content' : string,
+  'audio' : [] | [ExternalBlob],
   'video' : [] | [ExternalBlob],
   'sender' : string,
   'timestamp' : Time,
@@ -21,10 +22,13 @@ export interface Message {
 }
 export interface MessageInput {
   'content' : string,
+  'audio' : [] | [ExternalBlob],
   'video' : [] | [ExternalBlob],
   'sender' : string,
   'image' : [] | [ExternalBlob],
 }
+export type Role = { 'admin' : null } |
+  { 'guest' : null };
 export type Time = bigint;
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
@@ -53,12 +57,13 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
-  'deleteMessage' : ActorMethod<[bigint], undefined>,
-  'editMessage' : ActorMethod<[bigint, string], undefined>,
+  'authenticateAdmin' : ActorMethod<[string, string], boolean>,
+  'deleteMessage' : ActorMethod<[bigint, Role], undefined>,
+  'editMessage' : ActorMethod<[bigint, string, Role], undefined>,
   'getAllMessages' : ActorMethod<[], Array<Message>>,
   'getMessageById' : ActorMethod<[bigint], Message>,
   'getMessagesBySender' : ActorMethod<[string], Array<Message>>,
-  'sendMessage' : ActorMethod<[MessageInput], undefined>,
+  'sendMessage' : ActorMethod<[MessageInput], bigint>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

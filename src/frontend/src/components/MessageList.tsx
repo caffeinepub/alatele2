@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { Pencil, Trash2, Check, X } from 'lucide-react';
 import { useDeleteMessage, useEditMessage } from '../hooks/useMessages';
+import { useAuth } from '../hooks/useAuth';
 
 interface MessageListProps {
   messages: Message[];
@@ -17,6 +18,7 @@ export default function MessageList({ messages, currentUsername }: MessageListPr
   const [editingMessageId, setEditingMessageId] = useState<bigint | null>(null);
   const [editContent, setEditContent] = useState('');
   
+  const { isAdmin } = useAuth();
   const deleteMessageMutation = useDeleteMessage();
   const editMessageMutation = useEditMessage();
 
@@ -84,6 +86,7 @@ export default function MessageList({ messages, currentUsername }: MessageListPr
         const isEditing = editingMessageId === message.id;
         const hasImage = !!message.image;
         const hasVideo = !!message.video;
+        const hasAudio = !!message.audio;
         
         return (
           <div
@@ -189,6 +192,20 @@ export default function MessageList({ messages, currentUsername }: MessageListPr
                       </video>
                     )}
 
+                    {/* Audio Display */}
+                    {hasAudio && message.audio && (
+                      <div className="p-3">
+                        <audio
+                          src={message.audio.getDirectURL()}
+                          controls
+                          className="w-full max-w-sm"
+                          preload="metadata"
+                        >
+                          Your browser does not support the audio tag.
+                        </audio>
+                      </div>
+                    )}
+
                     {/* Text Content */}
                     {message.content && (
                       <div className="px-4 py-2.5">
@@ -199,7 +216,7 @@ export default function MessageList({ messages, currentUsername }: MessageListPr
                     )}
                   </div>
                   
-                  {isOwnMessage && (
+                  {isAdmin && (
                     <div className="flex gap-1 mt-1">
                       <Button
                         size="sm"

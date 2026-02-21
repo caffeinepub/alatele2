@@ -1,170 +1,201 @@
 {
   "kind": "build_request",
-  "title": "Add image and video sending to messenger",
-  "projectName": "Alatele",
+  "title": "Add dual login system with admin/guest authentication and audio messaging",
+  "projectName": "Alatele Messenger",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-4",
-      "text": "Extend the backend Message type to include optional image and video file data fields that can store media content alongside text",
-      "target": "backend",
+      "id": "REQ-1",
+      "text": "Create a dual-section login page with two distinct areas: Admin Login and Guest Login",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-6"
         ],
         "quotes": [
-          "به پیام رسانم بجز فرستادن متن فرستادن عکس و فیلم را اضافه کن"
+          "برای ورود به پیام رسان دو قسمت بزار قسمت اول ورود مدیران قسمت دوم ورود مهمان"
         ]
       },
       "acceptanceCriteria": [
-        "Message type supports optional image field",
-        "Message type supports optional video field",
-        "Existing text messages remain compatible",
-        "Media files are stored as Blob data type"
+        "Login page displays two clearly separated sections",
+        "Admin section contains fields for username, password, and optional display name",
+        "Guest section contains a button or link that navigates to username selection"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement admin authentication in backend that validates username 'Negin' and password 'Negin-Kish' only",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "یک نام کاربری و یک رمز بگزار که برای ورود این رمز و این نام کاربری جواب بده نام کاربری Negin و رمز عبور Negin-Kish فقط این دو قابل ورود باشند"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend validates admin credentials against hardcoded username 'Negin' and password 'Negin-Kish'",
+        "Authentication rejects any other username/password combinations",
+        "Backend returns authentication status and user role (admin or guest)"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add optional display name field to admin login section that can be used alongside credentials",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "البته اسم برای مدیران نیز می توان نوشت به صورت اختیاری یعنی در بخش ورود مدیران اسم قابل نمایش و نام کاربری و رمز عبور باشد"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin login form includes an optional display name field",
+        "Display name is stored and associated with the admin session if provided",
+        "If no display name is provided, username 'Negin' is used as display name"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Implement guest authentication flow that redirects to username selection without password requirement",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "قسمت دوم وقتی روش کیلیک می کنیم بره توی قسمت انتخاب یوزر یا اسم و وارد شود"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking guest login navigates to existing username selection interface",
+        "Guest users do not need to provide a password",
+        "Guest user role is stored in session"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Update the send message API to accept and store image files when users upload them",
-      "target": "backend",
+      "text": "Store user role (admin or guest) in session and frontend state to control UI permissions",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-6",
+          "msg-8"
         ],
         "quotes": [
-          "فرستادن عکس"
+          "مدیران به حذف و ویرایش پیام و همه چیز دسترسی دارند"
         ]
       },
       "acceptanceCriteria": [
-        "Backend accepts image uploads in common formats (JPEG, PNG, GIF, WebP)",
-        "Images are stored with the message record",
-        "Image data is retrievable when fetching messages"
+        "User role is persisted in session storage alongside username",
+        "Role determines visibility of edit and delete buttons in message list",
+        "Role is checked before allowing edit/delete operations"
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Update the send message API to accept and store video files when users upload them",
-      "target": "backend",
+      "text": "Add audio message recording capability with microphone access for all users",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-10"
         ],
         "quotes": [
-          "فیلم را اضافه کن"
+          "ارسال پیام صوتی برای همه کاربران"
         ]
       },
       "acceptanceCriteria": [
-        "Backend accepts video uploads in common formats (MP4, WebM)",
-        "Videos are stored with the message record",
-        "Video data is retrievable when fetching messages"
+        "Message input includes a record audio button",
+        "Clicking button requests microphone permission",
+        "Users can record, preview, and send audio messages",
+        "Audio files are converted to blob format for backend storage"
       ]
     },
     {
       "id": "REQ-7",
-      "text": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
-      "target": "frontend",
+      "text": "Extend backend message storage to support audio blob type alongside existing image and video types",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-10"
         ],
         "quotes": [
-          "فرستادن عکس"
+          "ارسال پیام صوتی برای همه کاربران"
         ]
       },
       "acceptanceCriteria": [
-        "File input button or drag-drop area for selecting images",
-        "Preview of selected image before sending",
-        "Ability to remove selected image before sending",
-        "Image uploads integrated with existing send message flow"
+        "Message record includes audio blob field",
+        "Backend accepts and stores audio blobs",
+        "Audio messages are retrievable with standard query operations"
       ]
     },
     {
       "id": "REQ-8",
-      "text": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
+      "text": "Display audio messages with playback controls in message list for all users",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "فیلم را اضافه کن"
+          "msg-10"
         ]
       },
       "acceptanceCriteria": [
-        "File input button or drag-drop area for selecting videos",
-        "Preview or filename display of selected video before sending",
-        "Ability to remove selected video before sending",
-        "Video uploads integrated with existing send message flow"
+        "Audio messages render with HTML5 audio player controls",
+        "Playback works for all audio formats supported by browser",
+        "Audio messages display alongside text, image, and video messages"
       ]
     },
     {
       "id": "REQ-9",
-      "text": "Update MessageList component to display embedded images in messages when present",
-      "target": "frontend",
+      "text": "Restrict edit and delete functionality for all message types (text, image, video, audio) to admin users only",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-10"
         ],
         "quotes": [
-          "فرستادن عکس"
+          "ولی ویرایش یا پاک آن فقط برای مدیران است"
         ]
       },
       "acceptanceCriteria": [
-        "Messages containing images show the image inline",
-        "Images are properly sized and responsive",
-        "Images can be clicked to view full size",
-        "Text and images display together when both are present"
+        "Edit and delete buttons only appear for admin users",
+        "Backend validates user role before processing edit/delete requests",
+        "Guest users can send all message types but cannot modify or delete any messages"
       ]
     },
     {
       "id": "REQ-10",
-      "text": "Update MessageList component to display embedded videos in messages when present with playback controls",
+      "text": "Update App.tsx to replace simple username check with dual login page as entry point",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "فیلم را اضافه کن"
+          "msg-7"
         ]
       },
       "acceptanceCriteria": [
-        "Messages containing videos show a video player inline",
-        "Video player includes standard controls (play, pause, volume, fullscreen)",
-        "Videos are properly sized and responsive",
-        "Text and videos display together when both are present"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "به پیام رسانم بجز فرستادن متن فرستادن عکس و فیلم را اضافه کن"
-        ]
-      },
-      "acceptanceCriteria": [
-        "useSendMessage hook accepts image and video file parameters",
-        "Message queries return image and video data when present",
-        "Client-side type definitions include image and video fields"
+        "App.tsx renders dual login page when no authenticated session exists",
+        "Session includes both username and user role",
+        "Successful authentication navigates to messaging interface"
       ]
     }
   ],
   "constraints": [
-    "Maintain backward compatibility with existing text-only messages",
-    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui",
-    "Keep all backend logic in the single main.mo actor file"
+    "Do not implement real-time messaging features (WebSockets, Socket.io)",
+    "Use existing session storage pattern (key: 'alatele2_username') for username persistence",
+    "Maintain existing message polling interval (2 seconds) from useMessages hook",
+    "Preserve existing message types and CRUD operations in backend",
+    "Do not modify useInternetIdentity.ts, useActor.ts, main.tsx, or frontend/src/components/ui",
+    "Audio recording must use browser MediaRecorder API (no external audio libraries)"
   ],
   "nonGoals": [
-    "Real-time video streaming or live chat features",
-    "Video compression or transcoding on upload",
-    "Advanced image editing capabilities",
-    "Third-party media hosting integrations",
-    "Thumbnail generation for videos"
+    "Real-time authentication status updates",
+    "Password reset or recovery functionality",
+    "Multi-factor authentication",
+    "Role-based access control beyond admin/guest distinction",
+    "Audio editing or processing features",
+    "Voice effects or filters for audio messages"
   ],
   "imageRequirements": {
     "required": [],

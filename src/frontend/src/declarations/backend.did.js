@@ -19,11 +19,13 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const Role = IDL.Variant({ 'admin' : IDL.Null, 'guest' : IDL.Null });
 export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const Time = IDL.Int;
 export const Message = IDL.Record({
   'id' : IDL.Nat,
   'content' : IDL.Text,
+  'audio' : IDL.Opt(ExternalBlob),
   'video' : IDL.Opt(ExternalBlob),
   'sender' : IDL.Text,
   'timestamp' : Time,
@@ -31,6 +33,7 @@ export const Message = IDL.Record({
 });
 export const MessageInput = IDL.Record({
   'content' : IDL.Text,
+  'audio' : IDL.Opt(ExternalBlob),
   'video' : IDL.Opt(ExternalBlob),
   'sender' : IDL.Text,
   'image' : IDL.Opt(ExternalBlob),
@@ -63,12 +66,13 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-  'deleteMessage' : IDL.Func([IDL.Nat], [], []),
-  'editMessage' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+  'authenticateAdmin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+  'deleteMessage' : IDL.Func([IDL.Nat, Role], [], []),
+  'editMessage' : IDL.Func([IDL.Nat, IDL.Text, Role], [], []),
   'getAllMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
   'getMessageById' : IDL.Func([IDL.Nat], [Message], ['query']),
   'getMessagesBySender' : IDL.Func([IDL.Text], [IDL.Vec(Message)], ['query']),
-  'sendMessage' : IDL.Func([MessageInput], [], []),
+  'sendMessage' : IDL.Func([MessageInput], [IDL.Nat], []),
 });
 
 export const idlInitArgs = [];
@@ -85,11 +89,13 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
+  const Role = IDL.Variant({ 'admin' : IDL.Null, 'guest' : IDL.Null });
   const ExternalBlob = IDL.Vec(IDL.Nat8);
   const Time = IDL.Int;
   const Message = IDL.Record({
     'id' : IDL.Nat,
     'content' : IDL.Text,
+    'audio' : IDL.Opt(ExternalBlob),
     'video' : IDL.Opt(ExternalBlob),
     'sender' : IDL.Text,
     'timestamp' : Time,
@@ -97,6 +103,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const MessageInput = IDL.Record({
     'content' : IDL.Text,
+    'audio' : IDL.Opt(ExternalBlob),
     'video' : IDL.Opt(ExternalBlob),
     'sender' : IDL.Text,
     'image' : IDL.Opt(ExternalBlob),
@@ -129,12 +136,13 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-    'deleteMessage' : IDL.Func([IDL.Nat], [], []),
-    'editMessage' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+    'authenticateAdmin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'deleteMessage' : IDL.Func([IDL.Nat, Role], [], []),
+    'editMessage' : IDL.Func([IDL.Nat, IDL.Text, Role], [], []),
     'getAllMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
     'getMessageById' : IDL.Func([IDL.Nat], [Message], ['query']),
     'getMessagesBySender' : IDL.Func([IDL.Text], [IDL.Vec(Message)], ['query']),
-    'sendMessage' : IDL.Func([MessageInput], [], []),
+    'sendMessage' : IDL.Func([MessageInput], [IDL.Nat], []),
   });
 };
 

@@ -2,9 +2,87 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-file-upload-controls-to-messageinput-component-allowing-users-to-select-and-attach-images-before-sending",
-      "featureTitle": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
+      "featureId": "feature-create-a-dual-section-login-page-with-two-distinct-areas-admin-login-and-guest-login",
+      "featureTitle": "Create a dual-section login page with two distinct areas: Admin Login and Guest Login",
       "files": [
+        "frontend/src/components/DualLoginPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-optional-display-name-field-to-admin-login-section-that-can-be-used-alongside-credentials",
+      "featureTitle": "Add optional display name field to admin login section that can be used alongside credentials",
+      "files": [
+        "frontend/src/components/DualLoginPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-guest-authentication-flow-that-redirects-to-username-selection-without-password-requirement",
+      "featureTitle": "Implement guest authentication flow that redirects to username selection without password requirement",
+      "files": [
+        "frontend/src/components/DualLoginPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-store-user-role-admin-or-guest-in-session-and-frontend-state-to-control-ui-permissions",
+      "featureTitle": "Store user role (admin or guest) in session and frontend state to control UI permissions",
+      "files": [
+        "frontend/src/components/MessageList.tsx",
+        "frontend/src/hooks/useAuth.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-audio-message-recording-capability-with-microphone-access-for-all-users",
+      "featureTitle": "Add audio message recording capability with microphone access for all users",
+      "files": [
+        "frontend/src/components/AudioRecorder.tsx",
         "frontend/src/components/MessageInput.tsx"
       ],
       "components": [
@@ -16,15 +94,15 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-7"
+        "REQ-6"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-file-upload-controls-to-messageinput-component-allowing-users-to-select-and-attach-videos-before-sending",
-      "featureTitle": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
+      "featureId": "feature-display-audio-messages-with-playback-controls-in-message-list-for-all-users",
+      "featureTitle": "Display audio messages with playback controls in message list for all users",
       "files": [
-        "frontend/src/components/MessageInput.tsx"
+        "frontend/src/components/MessageList.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -40,10 +118,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-messagelist-component-to-display-embedded-images-in-messages-when-present",
-      "featureTitle": "Update MessageList component to display embedded images in messages when present",
+      "featureId": "feature-restrict-edit-and-delete-functionality-for-all-message-types-text-image-video-audio-to-admin-users-only",
+      "featureTitle": "Restrict edit and delete functionality for all message types (text, image, video, audio) to admin users only",
       "files": [
-        "frontend/src/components/MessageList.tsx"
+        "frontend/src/components/MessageList.tsx",
+        "frontend/src/hooks/useMessages.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -59,10 +138,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-messagelist-component-to-display-embedded-videos-in-messages-when-present-with-playback-controls",
-      "featureTitle": "Update MessageList component to display embedded videos in messages when present with playback controls",
+      "featureId": "feature-update-app-tsx-to-replace-simple-username-check-with-dual-login-page-as-entry-point",
+      "featureTitle": "Update App.tsx to replace simple username check with dual login page as entry point",
       "files": [
-        "frontend/src/components/MessageList.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/components/Header.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -74,25 +154,6 @@
       ],
       "testIds": [
         "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-usemessages-hooks-to-handle-image-and-video-data-in-send-edit-and-fetch-operations",
-      "featureTitle": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
-      "files": [
-        "frontend/src/hooks/useMessages.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
       ],
       "confidence": "high"
     }

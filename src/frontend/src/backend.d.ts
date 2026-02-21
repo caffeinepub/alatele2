@@ -18,6 +18,7 @@ export type Time = bigint;
 export interface Message {
     id: bigint;
     content: string;
+    audio?: ExternalBlob;
     video?: ExternalBlob;
     sender: string;
     timestamp: Time;
@@ -25,15 +26,21 @@ export interface Message {
 }
 export interface MessageInput {
     content: string;
+    audio?: ExternalBlob;
     video?: ExternalBlob;
     sender: string;
     image?: ExternalBlob;
 }
+export enum Role {
+    admin = "admin",
+    guest = "guest"
+}
 export interface backendInterface {
-    deleteMessage(id: bigint): Promise<void>;
-    editMessage(id: bigint, newContent: string): Promise<void>;
+    authenticateAdmin(username: string, password: string): Promise<boolean>;
+    deleteMessage(id: bigint, role: Role): Promise<void>;
+    editMessage(id: bigint, newContent: string, role: Role): Promise<void>;
     getAllMessages(): Promise<Array<Message>>;
     getMessageById(id: bigint): Promise<Message>;
     getMessagesBySender(sender: string): Promise<Array<Message>>;
-    sendMessage(data: MessageInput): Promise<void>;
+    sendMessage(data: MessageInput): Promise<bigint>;
 }

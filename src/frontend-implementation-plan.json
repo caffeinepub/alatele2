@@ -1,89 +1,154 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add image and video sending to messenger",
+  "title": "Add dual login system with admin/guest authentication and audio messaging",
   "requirements": [
     {
-      "id": "REQ-7",
-      "summary": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
+      "id": "REQ-1",
+      "summary": "Create a dual-section login page with two distinct areas: Admin Login and Guest Login",
       "acceptanceCriteria": [
-        "File input button or drag-drop area for selecting images",
-        "Preview of selected image before sending",
-        "Ability to remove selected image before sending",
-        "Image uploads integrated with existing send message flow"
+        "Login page displays two clearly separated sections",
+        "Admin section contains fields for username, password, and optional display name",
+        "Guest section contains a button or link that navigates to username selection"
       ],
       "file_operations": [
         {
+          "path": "frontend/src/components/DualLoginPage.tsx",
+          "operation": "create",
+          "description": "Create a new dual-section login page component with two visually distinct areas: Admin Login section (left/top) with username, password, and optional display name fields; Guest Login section (right/bottom) with a button to navigate to username selection. Use shadcn/ui components for form inputs and buttons. Include Alatele branding consistent with UsernameEntry.tsx design."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add optional display name field to admin login section that can be used alongside credentials",
+      "acceptanceCriteria": [
+        "Admin login form includes an optional display name field",
+        "Display name is stored and associated with the admin session if provided",
+        "If no display name is provided, username 'Negin' is used as display name"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DualLoginPage.tsx",
+          "operation": "modify",
+          "description": "Include optional display name field in admin login form. Implement logic to store display name in session storage (key: 'alatele2_displayName') if provided, otherwise fall back to username 'Negin' as display name."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Implement guest authentication flow that redirects to username selection without password requirement",
+      "acceptanceCriteria": [
+        "Clicking guest login navigates to existing username selection interface",
+        "Guest users do not need to provide a password",
+        "Guest user role is stored in session"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DualLoginPage.tsx",
+          "operation": "modify",
+          "description": "Add guest login button that triggers navigation to UsernameEntry component. Store guest role in session storage (key: 'alatele2_role', value: 'guest') before navigation. No password required for guest flow."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Store user role (admin or guest) in session and frontend state to control UI permissions",
+      "acceptanceCriteria": [
+        "User role is persisted in session storage alongside username",
+        "Role determines visibility of edit and delete buttons in message list",
+        "Role is checked before allowing edit/delete operations"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "create",
+          "description": "Create custom React hook to manage authentication state including username, display name, and role (admin or guest). Read from and write to session storage keys: 'alatele2_username', 'alatele2_displayName', 'alatele2_role'. Export functions for login, logout, and role checking. Call backend authenticateAdmin function for admin login validation."
+        },
+        {
+          "path": "frontend/src/components/MessageList.tsx",
+          "operation": "modify",
+          "description": "Import useAuth hook and conditionally render edit/delete buttons only when user role is 'admin'. Hide edit/delete buttons for guest users. Replace current ownership check with role-based permission check."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add audio message recording capability with microphone access for all users",
+      "acceptanceCriteria": [
+        "Message input includes a record audio button",
+        "Clicking button requests microphone permission",
+        "Users can record, preview, and send audio messages",
+        "Audio files are converted to blob format for backend storage"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AudioRecorder.tsx",
+          "operation": "create",
+          "description": "Create audio recorder component using browser MediaRecorder API. Implement record button, recording indicator, stop button, audio preview player, and convert recorded audio to Uint8Array blob format. Handle microphone permission requests and display permission errors. Return recorded audio blob to parent component via callback."
+        },
+        {
           "path": "frontend/src/components/MessageInput.tsx",
           "operation": "modify",
-          "description": "Add image file upload functionality with file input control, preview display, and remove capability. Use the blob-storage component to handle image files via ExternalBlob.fromBytes() and withUploadProgress() for tracking upload progress. Verify the component's usage instructions before implementing. Integrate image attachment with existing send message flow to pass image data to the backend."
+          "description": "Import AudioRecorder component and add it to message input interface. Add state to track recorded audio blob. When audio is recorded, store it in component state and display preview. On form submission, include audio blob in MessageInput data using ExternalBlob.fromBytes(audioData). Clear audio state after send. Maintain parallel image/video upload logic."
         }
       ]
     },
     {
       "id": "REQ-8",
-      "summary": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
+      "summary": "Display audio messages with playback controls in message list for all users",
       "acceptanceCriteria": [
-        "File input button or drag-drop area for selecting videos",
-        "Preview or filename display of selected video before sending",
-        "Ability to remove selected video before sending",
-        "Video uploads integrated with existing send message flow"
+        "Audio messages render with HTML5 audio player controls",
+        "Playback works for all audio formats supported by browser",
+        "Audio messages display alongside text, image, and video messages"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/MessageInput.tsx",
+          "path": "frontend/src/components/MessageList.tsx",
           "operation": "modify",
-          "description": "Add video file upload functionality with file input control, filename or preview display, and remove capability. Use the blob-storage component to handle video files via ExternalBlob.fromBytes() and withUploadProgress() for tracking upload progress. Verify the component's usage instructions before implementing. Integrate video attachment with existing send message flow to pass video data to the backend."
+          "description": "Add conditional rendering for audio messages. When message.audio exists, render HTML5 audio element with controls attribute. Use message.audio.getDirectURL() as audio source for streaming and caching. Display audio player inline with message content, similar to image/video display pattern."
         }
       ]
     },
     {
       "id": "REQ-9",
-      "summary": "Update MessageList component to display embedded images in messages when present",
+      "summary": "Restrict edit and delete functionality for all message types (text, image, video, audio) to admin users only",
       "acceptanceCriteria": [
-        "Messages containing images show the image inline",
-        "Images are properly sized and responsive",
-        "Images can be clicked to view full size",
-        "Text and images display together when both are present"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MessageList.tsx",
-          "operation": "modify",
-          "description": "Add inline image rendering for messages with image field. Use ExternalBlob.getDirectURL() method from the blob-storage component to display images efficiently with streaming and caching. Verify the component's usage instructions before implementing. Implement responsive sizing, clickable full-size view, and ensure text and images display together when both are present in a message."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Update MessageList component to display embedded videos in messages when present with playback controls",
-      "acceptanceCriteria": [
-        "Messages containing videos show a video player inline",
-        "Video player includes standard controls (play, pause, volume, fullscreen)",
-        "Videos are properly sized and responsive",
-        "Text and videos display together when both are present"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MessageList.tsx",
-          "operation": "modify",
-          "description": "Add inline video player rendering for messages with video field. Use ExternalBlob.getDirectURL() method from the blob-storage component to display videos efficiently with streaming and caching. Verify the component's usage instructions before implementing. Include standard HTML5 video controls (play, pause, volume, fullscreen), implement responsive sizing, and ensure text and videos display together when both are present in a message."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
-      "acceptanceCriteria": [
-        "useSendMessage hook accepts image and video file parameters",
-        "Message queries return image and video data when present",
-        "Client-side type definitions include image and video fields"
+        "Edit and delete buttons only appear for admin users",
+        "Backend validates user role before processing edit/delete requests",
+        "Guest users can send all message types but cannot modify or delete any messages"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useMessages.ts",
           "operation": "modify",
-          "description": "Update useSendMessage mutation to accept optional image and video parameters of type ExternalBlob from the blob-storage component. Verify the component's usage instructions before implementing. Ensure MessageInput type includes optional image and video fields and that these fields are properly passed to the backend sendMessage function. Message fetch operations already receive image and video data from the backend interface, ensure proper handling and type safety."
+          "description": "Modify deleteMessage and editMessage functions to include role parameter from useAuth hook. Pass Role enum value ('admin' or 'guest') to backend deleteMessage and editMessage functions. Handle permission errors gracefully."
+        },
+        {
+          "path": "frontend/src/components/MessageList.tsx",
+          "operation": "modify",
+          "description": "Update edit/delete button rendering to check role from useAuth hook. Only display edit/delete buttons when role is 'admin'. Remove per-message ownership check and replace with global role check. Apply to all message types (text, image, video, audio)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Update App.tsx to replace simple username check with dual login page as entry point",
+      "acceptanceCriteria": [
+        "App.tsx renders dual login page when no authenticated session exists",
+        "Session includes both username and user role",
+        "Successful authentication navigates to messaging interface"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Import DualLoginPage and useAuth hook. Replace current username-only session check with authentication check from useAuth. Render DualLoginPage when user is not authenticated. Render MessagingInterface when user is authenticated (either admin or guest). Remove direct UsernameEntry rendering; guest flow now routes through DualLoginPage first."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Import useAuth hook and display user's display name instead of username. Update logout button to call useAuth logout function which clears username, displayName, and role from session storage."
         }
       ]
     }

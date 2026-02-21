@@ -1,12 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
 
 interface HeaderProps {
-  username: string;
   onLogout: () => void;
 }
 
-export default function Header({ username, onLogout }: HeaderProps) {
+export default function Header({ onLogout }: HeaderProps) {
+  const { displayName } = useAuth();
+
   return (
     <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -18,7 +20,7 @@ export default function Header({ username, onLogout }: HeaderProps) {
           />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Alatele</h1>
-            <p className="text-xs text-muted-foreground">Logged in as {username}</p>
+            <p className="text-xs text-muted-foreground">Logged in as {displayName}</p>
           </div>
         </div>
         

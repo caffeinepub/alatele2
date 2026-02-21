@@ -1,13 +1,17 @@
 # Specification
 
 ## Summary
-**Goal:** Add image and video sending capabilities to the Alatele messenger application.
+**Goal:** Add dual login system with admin/guest authentication and audio messaging capability.
 
 **Planned changes:**
-- Extend backend Message type to support optional image and video file data fields
-- Update send message API to accept and store image and video uploads
-- Add file upload controls to MessageInput component for selecting images and videos
-- Display embedded images and videos with playback controls in MessageList component
-- Update useMessages hooks to handle image and video data in all operations
+- Create dual-section login page with Admin Login (username/password/optional display name) and Guest Login sections
+- Implement admin authentication in backend that validates only username 'Negin' and password 'Negin-Kish'
+- Add guest authentication flow that redirects to username selection without password requirement
+- Store user role (admin or guest) in session to control UI permissions
+- Add audio message recording capability with microphone access for all users
+- Extend backend message storage to support audio blob type alongside existing image and video types
+- Display audio messages with playback controls in message list
+- Restrict edit and delete functionality for all message types to admin users only
+- Update App.tsx to replace simple username check with dual login page as entry point
 
-**User-visible outcome:** Users can attach and send images and videos in their messages, see media content inline in conversations, and play videos directly in the chat interface.
+**User-visible outcome:** Users can log in as either admin (with credentials) or guest (username only), send text/image/video/audio messages, and admins can edit/delete any message while guests can only send messages.

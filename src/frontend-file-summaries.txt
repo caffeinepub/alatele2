@@ -1,12 +1,16 @@
 {
-  "frontend/src/App.tsx": "Main application component that manages username state and conditionally renders either the username entry screen or the messaging interface based on session storage.",
-  "frontend/src/components/UsernameEntry.tsx": "Username entry form component with alpha logo branding that allows users to enter any username to join the chat without authentication.",
-  "frontend/src/components/MessagingInterface.tsx": "Main messaging interface component that orchestrates the header, message list, message input with image/video support, and footer with real-time message polling and auto-scroll.",
-  "frontend/src/components/Header.tsx": "Header component displaying the alpha logo, app name \"Alatele\", current username, and logout button.",
-  "frontend/src/components/MessageList.tsx": "Message list component that renders chat messages with avatars, timestamps, inline image display with click-to-enlarge dialog, inline video player with controls, and edit/delete buttons for the current user's messages.",
-  "frontend/src/components/MessageInput.tsx": "Message input component with textarea, send button, and file upload controls for images and videos with preview display, progress tracking, and integrated send flow using ExternalBlob from blob-storage.",
-  "frontend/src/hooks/useMessages.ts": "Custom React Query hooks that manage message fetching with 2-second polling, message sending with support for optional image and video ExternalBlob attachments, and message editing/deleting mutations with automatic cache invalidation.",
+  "frontend/src/App.tsx": "Main application component that manages authentication flow, rendering DualLoginPage for unauthenticated users, UsernameEntry for guest username selection, and MessagingInterface for authenticated users (admin or guest).",
+  "frontend/src/components/UsernameEntry.tsx": "Username entry form component with alpha logo branding displaying \"Alatele\" as the app name for users to join the chat.",
+  "frontend/src/components/MessagingInterface.tsx": "Main messaging interface with optimized auto-scroll, Header, MessageList, and MessageInput components, using useAuth for user context and useMessages for message operations.",
+  "frontend/src/components/Header.tsx": "Header component displaying the alpha logo, app name \"Alatele\", current user's display name, and logout button that calls useAuth logout function.",
+  "frontend/src/components/MessageList.tsx": "Message list component that renders chat messages with avatars, timestamps, inline image/video/audio display, and edit/delete buttons visible only to admin users based on role-based permission check.",
+  "frontend/src/components/MessageInput.tsx": "Message input component with text area, image/video upload buttons, audio recording capability, upload progress indicator, and form submission that supports text, image, video, and audio messages with proper type conversion for audio data.",
+  "frontend/src/hooks/useMessages.ts": "Custom React Query hooks with optimistic updates for message operations (send, edit, delete) including audio support, role-based permission passing to backend, and automatic cache invalidation.",
   "frontend/src/lib/utils.ts": "Utility functions including the cn() helper for merging Tailwind CSS classes with clsx and tailwind-merge.",
   "frontend/src/index.css": "Global styles with OKLCH color system defining a teal/cyan-based color palette for both light and dark modes, avoiding blue and purple tones.",
-  "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens mapped to OKLCH CSS variables and extended theme settings for the messaging app design system."
+  "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens mapped to OKLCH CSS variables and extended theme settings for the messaging app design system.",
+  "frontend/index.html": "HTML entry point with page title set to \"Alatele\".",
+  "frontend/src/hooks/useAuth.ts": "Custom React hook that manages authentication state including username, display name, and role (admin or guest), with functions for admin login (with backend validation), guest login, logout, and role checking.",
+  "frontend/src/components/DualLoginPage.tsx": "Dual-section login page component with two visually distinct areas: Admin Login section with username, password, and optional display name fields; Guest Login section with a button to navigate to username selection.",
+  "frontend/src/components/AudioRecorder.tsx": "Audio recorder component using browser MediaRecorder API with record button, recording indicator, stop button, audio preview player, and conversion to Uint8Array blob format for backend storage."
 }

@@ -28,7 +28,7 @@ export default function UsernameEntry({ onSubmit }: UsernameEntryProps) {
               className="w-24 h-24 object-contain"
             />
           </div>
-          <CardTitle className="text-4xl font-bold tracking-tight">Alatele2</CardTitle>
+          <CardTitle className="text-4xl font-bold tracking-tight">Alatele</CardTitle>
           <CardDescription className="text-base">
             Enter a username to join the conversation
           </CardDescription>

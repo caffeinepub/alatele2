@@ -3,70 +3,64 @@ import Header from './Header';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useMessages } from '../hooks/useMessages';
-import { Loader2 } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
 import { ExternalBlob } from '../backend';
 
 interface MessagingInterfaceProps {
-  username: string;
   onLogout: () => void;
 }
 
-export default function MessagingInterface({ username, onLogout }: MessagingInterfaceProps) {
+export default function MessagingInterface({ onLogout }: MessagingInterfaceProps) {
+  const { username, displayName } = useAuth();
   const { messages, isLoading, sendMessage, isSending } = useMessages();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const previousMessageCountRef = useRef(messages.length);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Auto-scroll when messages change
+    if (messages.length > previousMessageCountRef.current) {
+      scrollToBottom();
+    }
+    previousMessageCountRef.current = messages.length;
+  }, [messages.length]);
 
-  const handleSendMessage = async (content: string, image?: ExternalBlob, video?: ExternalBlob) => {
-    await sendMessage(username, content, image, video);
+  const handleSendMessage = async (content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob) => {
+    if (username) {
+      await sendMessage(displayName || username, content, image, video, audio);
+      // Immediate scroll after sending
+      setTimeout(scrollToBottom, 100);
+    }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading messages...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <Header username={username} onLogout={onLogout} />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-accent/5">
+      <Header onLogout={onLogout} />
       
-      <main className="flex-1 overflow-hidden flex flex-col">
-        <div className="flex-1 overflow-y-auto px-4 py-6">
-          {isLoading ? (
-            <div className="flex items-center justify-center h-full">
-              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : (
-            <>
-              <MessageList messages={messages} currentUsername={username} />
-              <div ref={messagesEndRef} />
-            </>
-          )}
-        </div>
-        
-        <div className="border-t bg-card/50 backdrop-blur-sm">
-          <div className="max-w-4xl mx-auto px-4 py-4">
-            <MessageInput onSend={handleSendMessage} isSending={isSending} />
-          </div>
-        </div>
+      <main className="flex-1 overflow-y-auto px-4 py-6">
+        <MessageList messages={messages} currentUsername={displayName || username || ''} />
+        <div ref={messagesEndRef} />
       </main>
 
-      <footer className="border-t py-3 px-4 text-center text-sm text-muted-foreground bg-card/30">
-        <p>
-          © {new Date().getFullYear()} • Built with ❤️ using{' '}
-          <a
-            href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
-              typeof window !== 'undefined' ? window.location.hostname : 'alatele2'
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline font-medium"
-          >
-            caffeine.ai
-          </a>
-        </p>
-      </footer>
+      <div className="border-t bg-card/50 backdrop-blur-sm sticky bottom-0">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <MessageInput onSend={handleSendMessage} isSending={isSending} />
+        </div>
+      </div>
     </div>
   );
 }

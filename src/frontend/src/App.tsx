@@ -1,33 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import DualLoginPage from './components/DualLoginPage';
 import UsernameEntry from './components/UsernameEntry';
 import MessagingInterface from './components/MessagingInterface';
+import { useAuth } from './hooks/useAuth';
 
 function App() {
-  const [username, setUsername] = useState<string | null>(null);
+  const { isAuthenticated, loginGuest, logout } = useAuth();
+  const [showGuestEntry, setShowGuestEntry] = useState(false);
 
-  useEffect(() => {
-    // Check if username exists in session storage
-    const storedUsername = sessionStorage.getItem('alatele2_username');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-  }, []);
+  const handleGuestClick = () => {
+    setShowGuestEntry(true);
+  };
 
-  const handleUsernameSubmit = (name: string) => {
-    sessionStorage.setItem('alatele2_username', name);
-    setUsername(name);
+  const handleGuestUsernameSubmit = (username: string) => {
+    loginGuest(username);
+    setShowGuestEntry(false);
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('alatele2_username');
-    setUsername(null);
+    logout();
+    setShowGuestEntry(false);
   };
 
-  if (!username) {
-    return <UsernameEntry onSubmit={handleUsernameSubmit} />;
+  if (!isAuthenticated) {
+    if (showGuestEntry) {
+      return <UsernameEntry onSubmit={handleGuestUsernameSubmit} />;
+    }
+    return <DualLoginPage onGuestClick={handleGuestClick} />;
   }
 
-  return <MessagingInterface username={username} onLogout={handleLogout} />;
+  return <MessagingInterface onLogout={handleLogout} />;
 }
 
 export default App;

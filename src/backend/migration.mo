@@ -1,41 +1,49 @@
 import Map "mo:core/Map";
 import Nat "mo:core/Nat";
 import Storage "blob-storage/Storage";
-import Time "mo:core/Time";
 
 module {
   type OldMessage = {
-    id : Nat;
-    sender : Text;
     content : Text;
-    timestamp : Time.Time;
+    id : Nat;
+    image : ?Storage.ExternalBlob;
+    video : ?Storage.ExternalBlob;
+    sender : Text;
+    timestamp : Int;
   };
 
   type OldActor = {
-    nextMessageId : Nat;
     messagesStore : Map.Map<Nat, OldMessage>;
+    nextMessageId : Nat;
   };
 
   type NewMessage = {
-    id : Nat;
-    sender : Text;
     content : Text;
+    id : Nat;
     image : ?Storage.ExternalBlob;
     video : ?Storage.ExternalBlob;
-    timestamp : Time.Time;
+    audio : ?Storage.ExternalBlob;
+    sender : Text;
+    timestamp : Int;
   };
 
   type NewActor = {
-    nextMessageId : Nat;
     messagesStore : Map.Map<Nat, NewMessage>;
+    nextMessageId : Nat;
   };
 
   public func run(old : OldActor) : NewActor {
-    let messagesStore = old.messagesStore.map<Nat, OldMessage, NewMessage>(
-      func(_id, old) {
-        { old with image = null; video = null };
+    let newMessagesStore = old.messagesStore.map<Nat, OldMessage, NewMessage>(
+      func(_id, oldMessage) {
+        {
+          oldMessage with
+          audio = null
+        };
       }
     );
-    { old with messagesStore };
+    {
+      old with
+      messagesStore = newMessagesStore : Map.Map<Nat, NewMessage>;
+    };
   };
 };

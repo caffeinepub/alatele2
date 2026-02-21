@@ -1,48 +1,79 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Messaging application with text, image, and video sending capabilities",
-  "architectural_notes": [],
-  "known_issues": [],
+  "summary": "A messenger application with dual login system: admin login (username: Negin, password: Negin-Kish) with full edit/delete permissions, and guest login (username selection only) with send-only permissions. All users can send text, image, video, and audio messages. Admins have complete access to edit and delete all messages. Display names shown in chat, profile, and next to messages.",
+  "architectural_notes": [
+    "Backend authentication for admin credentials (Negin/Negin-Kish)",
+    "File storage on Internet Computer for images, videos, and audio messages",
+    "Role-based access control: admin (full permissions) vs guest (send-only)",
+    "Message refresh mechanism (non-real-time)"
+  ],
+  "known_issues": [
+    "No real-time messaging - messages load on page refresh or at intervals"
+  ],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-file-upload-controls-to-messageinput-component-allowing-users-to-select-and-attach-images-before-sending",
-      "title": "Add file upload controls to MessageInput component allowing users to select and attach images before sending",
+      "id": "feature-create-a-dual-section-login-page-with-two-distinct-areas-admin-login-and-guest-login",
+      "title": "Create a dual-section login page with two distinct areas: Admin Login and Guest Login",
       "reqIds": [
-        "REQ-7"
+        "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-file-upload-controls-to-messageinput-component-allowing-users-to-select-and-attach-videos-before-sending",
-      "title": "Add file upload controls to MessageInput component allowing users to select and attach videos before sending",
+      "id": "feature-add-optional-display-name-field-to-admin-login-section-that-can-be-used-alongside-credentials",
+      "title": "Add optional display name field to admin login section that can be used alongside credentials",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-guest-authentication-flow-that-redirects-to-username-selection-without-password-requirement",
+      "title": "Implement guest authentication flow that redirects to username selection without password requirement",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-store-user-role-admin-or-guest-in-session-and-frontend-state-to-control-ui-permissions",
+      "title": "Store user role (admin or guest) in session and frontend state to control UI permissions",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-audio-message-recording-capability-with-microphone-access-for-all-users",
+      "title": "Add audio message recording capability with microphone access for all users",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-audio-messages-with-playback-controls-in-message-list-for-all-users",
+      "title": "Display audio messages with playback controls in message list for all users",
       "reqIds": [
         "REQ-8"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-messagelist-component-to-display-embedded-images-in-messages-when-present",
-      "title": "Update MessageList component to display embedded images in messages when present",
+      "id": "feature-restrict-edit-and-delete-functionality-for-all-message-types-text-image-video-audio-to-admin-users-only",
+      "title": "Restrict edit and delete functionality for all message types (text, image, video, audio) to admin users only",
       "reqIds": [
         "REQ-9"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-messagelist-component-to-display-embedded-videos-in-messages-when-present-with-playback-controls",
-      "title": "Update MessageList component to display embedded videos in messages when present with playback controls",
+      "id": "feature-update-app-tsx-to-replace-simple-username-check-with-dual-login-page-as-entry-point",
+      "title": "Update App.tsx to replace simple username check with dual login page as entry point",
       "reqIds": [
         "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-usemessages-hooks-to-handle-image-and-video-data-in-send-edit-and-fetch-operations",
-      "title": "Update useMessages hooks to handle image and video data in send, edit, and fetch operations",
-      "reqIds": [
-        "REQ-11"
       ],
       "version": 1
     }
@@ -50,42 +81,70 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add image sending capability to messenger",
+      "summary": "Dual login page with admin and guest sections",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Add video sending capability to messenger",
+      "summary": "Admin authentication with username Negin and password Negin-Kish",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Extend the backend Message type to include optional image and video file data fields that can store media content alongside text",
-      "reqIds": [
-        "REQ-4"
-      ],
+      "summary": "Guest login with username selection (no password)",
+      "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Update the send message API to accept and store image files when users upload them",
-      "reqIds": [
-        "REQ-5"
-      ],
+      "summary": "Optional display name field for admins",
+      "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-5",
-      "summary": "Update the send message API to accept and store video files when users upload them",
+      "summary": "Message sending capability for all users (text, image, video, audio)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Admin-only edit and delete permissions for all messages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Display names shown in chat, profile, and next to messages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Audio message recording and playback",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement admin authentication in backend that validates username 'Negin' and password 'Negin-Kish' only",
       "reqIds": [
-        "REQ-6"
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Extend backend message storage to support audio blob type alongside existing image and video types",
+      "reqIds": [
+        "REQ-7"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Alatele",
+  "projectName": "Alatele Messenger",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

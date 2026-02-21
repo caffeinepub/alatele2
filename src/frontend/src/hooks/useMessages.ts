@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { type Message, type MessageInput, ExternalBlob } from '../backend';
+import { useAuth } from './useAuth';
+import { type Message, type MessageInput, ExternalBlob, Role } from '../backend';
 
 export function useMessages() {
   const { actor, isFetching: isActorFetching } = useActor();
@@ -32,12 +33,14 @@ export function useMessages() {
       sender, 
       content, 
       image, 
-      video 
+      video,
+      audio
     }: { 
       sender: string; 
       content: string; 
       image?: ExternalBlob; 
       video?: ExternalBlob;
+      audio?: ExternalBlob;
     }) => {
       if (!actor) throw new Error('Actor not initialized');
       
@@ -46,12 +49,45 @@ export function useMessages() {
         content,
         image,
         video,
+        audio,
       };
       
-      await actor.sendMessage(messageInput);
+      const messageId = await actor.sendMessage(messageInput);
+      return messageId;
     },
-    onSuccess: () => {
-      // Invalidate and refetch messages after sending
+    onMutate: async ({ sender, content, image, video, audio }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['messages'] });
+
+      // Snapshot the previous value
+      const previousMessages = queryClient.getQueryData<Message[]>(['messages']);
+
+      // Optimistically update to the new value
+      const optimisticMessage: Message = {
+        id: BigInt(Date.now()), // Temporary ID
+        sender,
+        content,
+        image,
+        video,
+        audio,
+        timestamp: BigInt(Date.now() * 1_000_000), // Convert to nanoseconds
+      };
+
+      queryClient.setQueryData<Message[]>(['messages'], (old) => 
+        [...(old || []), optimisticMessage]
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousMessages };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousMessages) {
+        queryClient.setQueryData(['messages'], context.previousMessages);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure consistency
       queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
   });
@@ -59,20 +95,22 @@ export function useMessages() {
   return {
     messages: messagesQuery.data || [],
     isLoading: messagesQuery.isLoading,
-    sendMessage: (sender: string, content: string, image?: ExternalBlob, video?: ExternalBlob) => 
-      sendMessageMutation.mutateAsync({ sender, content, image, video }),
+    sendMessage: (sender: string, content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob) => 
+      sendMessageMutation.mutateAsync({ sender, content, image, video, audio }),
     isSending: sendMessageMutation.isPending,
   };
 }
 
 export function useDeleteMessage() {
   const { actor } = useActor();
+  const { role } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: bigint) => {
       if (!actor) throw new Error('Actor not initialized');
-      await actor.deleteMessage(id);
+      if (!role) throw new Error('User role not found');
+      await actor.deleteMessage(id, role as Role);
     },
     onSuccess: () => {
       // Invalidate and refetch messages after deleting
@@ -83,12 +121,14 @@ export function useDeleteMessage() {
 
 export function useEditMessage() {
   const { actor } = useActor();
+  const { role } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, newContent }: { id: bigint; newContent: string }) => {
       if (!actor) throw new Error('Actor not initialized');
-      await actor.editMessage(id, newContent);
+      if (!role) throw new Error('User role not found');
+      await actor.editMessage(id, newContent, role as Role);
     },
     onSuccess: () => {
       // Invalidate and refetch messages after editing
