@@ -1,14 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Rename the application to "Alatele" and add message editing and deletion capabilities for users.
+**Goal:** Remove all subscription and payment functionality to make the Alatele messaging app completely free for all users.
 
 **Planned changes:**
-- Update application name from "Alatele2" to "Alatele" in the header and all UI references
-- Add delete button to messages allowing users to remove their own messages
-- Add edit button to messages allowing users to modify their own message content
-- Extend backend message model to include unique message IDs
-- Implement backend functions for deleting and editing messages by ID with sender validation
-- Create React Query hooks for delete and edit operations with automatic cache refresh
+- Remove all subscription, payment, and premium tier UI elements from frontend components
+- Remove subscription and payment-related backend logic, data models, and API endpoints
+- Ensure all messaging features (send, edit, delete) are unrestricted and available to all users
 
-**User-visible outcome:** Users can edit or delete their own messages in the chat, and the application displays "Alatele" as its name throughout the interface.
+**User-visible outcome:** All users can access the full messaging functionality without any subscription prompts, payment gates, or feature restrictions.

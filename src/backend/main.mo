@@ -6,9 +6,7 @@ import Order "mo:core/Order";
 import Runtime "mo:core/Runtime";
 import Iter "mo:core/Iter";
 import Nat "mo:core/Nat";
-import Migration "migration";
 
-(with migration = Migration.run)
 actor {
   type Message = {
     id : Nat;

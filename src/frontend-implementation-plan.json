@@ -1,84 +1,71 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add message edit and delete features, rename app to Alatele",
+  "title": "Remove subscription and make app completely free for all users",
   "requirements": [
     {
-      "id": "REQ-7",
-      "summary": "Update the application name from 'Alatele2' to 'Alatele' in the Header component and all UI-facing locations",
+      "id": "REQ-13",
+      "summary": "Remove any subscription, payment, or premium tier UI elements from all frontend components",
       "acceptanceCriteria": [
-        "The header displays 'Alatele' instead of 'Alatele2'",
-        "All user-visible references to the app name are updated to 'Alatele'"
+        "No subscription prompts, payment buttons, or premium feature locks are visible in the UI",
+        "All messaging features remain accessible without any payment gates"
       ],
       "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Review and remove any subscription or payment-related UI elements, state management, or conditional rendering based on subscription status from the root component"
+        },
         {
           "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Change the app title text from 'Alatele2' to 'Alatele' in the header component"
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Add a delete button to each message that allows users to delete their own messages",
-      "acceptanceCriteria": [
-        "A delete button appears on messages sent by the current user",
-        "Clicking the delete button removes the message from the message list",
-        "The message is permanently deleted from backend storage",
-        "Other users cannot see deleted messages after refresh",
-        "Users cannot delete messages sent by other users"
-      ],
-      "file_operations": [
+          "description": "Remove any subscription badges, premium indicators, or upgrade buttons from the header component"
+        },
+        {
+          "path": "frontend/src/components/MessagingInterface.tsx",
+          "operation": "modify",
+          "description": "Remove any subscription prompts, payment gates, or premium feature locks from the main messaging interface"
+        },
+        {
+          "path": "frontend/src/components/MessageInput.tsx",
+          "operation": "modify",
+          "description": "Remove any message sending limits, premium feature checks, or subscription prompts that gate message input functionality"
+        },
         {
           "path": "frontend/src/components/MessageList.tsx",
           "operation": "modify",
-          "description": "Add a delete button that appears only on messages sent by the current user. The button should call the useDeleteMessage hook with the message ID. Only show the delete button when the message sender matches the current username prop."
+          "description": "Remove any subscription-based restrictions on message editing or deletion, ensuring all users can edit and delete their own messages without limitations"
         },
         {
-          "path": "frontend/src/hooks/useMessages.ts",
+          "path": "frontend/src/components/UsernameEntry.tsx",
           "operation": "modify",
-          "description": "Add a useDeleteMessage mutation hook that calls the backend deleteMessage function with the message ID and invalidates the messages query cache on success. Handle loading and error states appropriately."
+          "description": "Remove any subscription tier selection, payment prompts, or premium account creation options from the username entry screen"
         }
       ]
     },
     {
-      "id": "REQ-9",
-      "summary": "Add an edit button to each message that allows users to edit their own messages",
+      "id": "REQ-15",
+      "summary": "Ensure all messaging features (send, edit, delete) are available to all users without any restrictions",
       "acceptanceCriteria": [
-        "An edit button appears on messages sent by the current user",
-        "Clicking the edit button enables inline editing of the message content",
-        "Users can save the edited message or cancel the edit",
-        "The edited message is updated in backend storage",
-        "Other users see the updated message content after refresh",
-        "Users cannot edit messages sent by other users"
+        "Every user can send unlimited messages",
+        "Every user can edit and delete their own messages without restrictions",
+        "No usage limits or feature gates are enforced"
       ],
       "file_operations": [
+        {
+          "path": "frontend/src/hooks/useMessages.ts",
+          "operation": "modify",
+          "description": "Remove any subscription validation, usage limit checks, or premium feature guards from the message operation hooks (send, edit, delete)"
+        },
+        {
+          "path": "frontend/src/components/MessageInput.tsx",
+          "operation": "modify",
+          "description": "Ensure the message input component allows unlimited message sending without any subscription checks or usage counters"
+        },
         {
           "path": "frontend/src/components/MessageList.tsx",
           "operation": "modify",
-          "description": "Add an edit button that appears only on messages sent by the current user. Clicking the edit button should toggle inline editing mode for that message, showing a textarea with the current content and save/cancel buttons. The save button should call the useEditMessage hook with the message ID and new content. Only show the edit button when the message sender matches the current username prop."
-        },
-        {
-          "path": "frontend/src/hooks/useMessages.ts",
-          "operation": "modify",
-          "description": "Add a useEditMessage mutation hook that calls the backend editMessage function with the message ID and new content, and invalidates the messages query cache on success. Handle loading and error states appropriately."
-        }
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "summary": "Create React Query hooks for delete and edit message operations with automatic cache invalidation",
-      "acceptanceCriteria": [
-        "A useDeleteMessage hook calls the backend delete function and invalidates the messages query",
-        "A useEditMessage hook calls the backend edit function and invalidates the messages query",
-        "Both hooks handle loading and error states appropriately",
-        "The message list refreshes automatically after successful operations"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useMessages.ts",
-          "operation": "modify",
-          "description": "Export useDeleteMessage and useEditMessage mutation hooks using React Query's useMutation. Both hooks should use the backend actor from useActor, call the respective backend functions (deleteMessage and editMessage), and invalidate the 'messages' query key on success to trigger automatic refetch. Include proper error handling and loading states."
+          "description": "Ensure edit and delete actions are available for all users on their own messages without any subscription or premium tier validation"
         }
       ]
     }

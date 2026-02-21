@@ -1,12 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
-  "summary": "A simple messaging app called 'alatele' with Greek alpha symbol (α) as icon/image. Users enter with a random username (no authentication). Users can delete and edit their messages.",
+  "projectStateVersion": 7,
+  "summary": "A simple free messaging app called 'alatele' with Greek alpha symbol (α) as icon/image. Users enter with a random username (no authentication). Users can delete and edit their messages. No subscription or payment required.",
   "architectural_notes": [
     "Web-based messaging application",
     "No authentication system - users enter with random usernames",
     "Greek alpha (α) symbol used as branding/icon",
-    "Users can delete and edit their own messages"
+    "Users can delete and edit their own messages",
+    "Completely free service with no subscription or payment requirements"
   ],
   "known_issues": [],
   "isFixRequest": false,
@@ -136,6 +137,36 @@
       "summary": "Implement backend functions for deleting a message by ID and editing a message's content by ID",
       "reqIds": [
         "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Remove subscription/payment system and make app completely free for all users",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Remove any subscription, payment, or premium tier UI elements from all frontend components",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Remove any subscription or payment-related backend logic, data models, and API endpoints",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Ensure all messaging features (send, edit, delete) are available to all users without any restrictions",
+      "reqIds": [
+        "REQ-15"
       ],
       "status": "pending"
     }

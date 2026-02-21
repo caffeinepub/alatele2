@@ -1,94 +1,54 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T11:18:25.612Z",
+  "generatedAt": "2026-02-21T11:36:21.126Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 0,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Extend the backend Message type to include a unique message ID field for identifying individual messages",
+        "id": "REQ-13",
+        "summary": "Remove any subscription, payment, or premium tier UI elements from all frontend components",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/Header.tsx",
+          "frontend/src/components/MessagingInterface.tsx",
+          "frontend/src/components/MessageInput.tsx",
+          "frontend/src/components/MessageList.tsx",
+          "frontend/src/components/UsernameEntry.tsx"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Remove any subscription or payment-related backend logic, data models, and API endpoints",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-11",
-        "summary": "Implement backend functions for deleting a message by ID and editing a message's content by ID",
-        "status": "unknown",
-        "plannedFiles": [],
+        "id": "REQ-15",
+        "summary": "Ensure all messaging features (send, edit, delete) are available to all users without any restrictions",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/hooks/useMessages.ts",
+          "frontend/src/components/MessageInput.tsx",
+          "frontend/src/components/MessageList.tsx"
+        ],
         "matchedFiles": []
-      },
-      {
-        "id": "REQ-12",
-        "summary": "Create React Query hooks for delete and edit message operations with automatic cache invalidation",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useMessages.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useMessages.ts"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Update the application name from 'Alatele2' to 'Alatele' in the Header component and all UI-facing locations",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/Header.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/Header.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Add a delete button to each message that allows users to delete their own messages",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/MessageList.tsx",
-          "frontend/src/hooks/useMessages.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/MessageList.tsx",
-          "frontend/src/hooks/useMessages.ts"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Add an edit button to each message that allows users to edit their own messages",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/MessageList.tsx",
-          "frontend/src/hooks/useMessages.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/MessageList.tsx",
-          "frontend/src/hooks/useMessages.ts"
-        ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/Header.tsx",
-    "frontend/src/components/MessageList.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useMessages.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

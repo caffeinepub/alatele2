@@ -1,125 +1,71 @@
 {
   "kind": "build_request",
-  "title": "Add message edit and delete features, rename app to Alatele",
+  "title": "Remove subscription and make app completely free for all users",
   "projectName": "Alatele",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-7",
-      "text": "Update the application name from 'Alatele2' to 'Alatele' in the Header component and all UI-facing locations",
+      "id": "REQ-13",
+      "text": "Remove any subscription, payment, or premium tier UI elements from all frontend components",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-final"
         ],
         "quotes": [
-          "اسم برنامه را به alatele تغییر بده"
+          "اشتراک را بردار و کلا رایگان کن برای همه"
         ]
       },
       "acceptanceCriteria": [
-        "The header displays 'Alatele' instead of 'Alatele2'",
-        "All user-visible references to the app name are updated to 'Alatele'"
+        "No subscription prompts, payment buttons, or premium feature locks are visible in the UI",
+        "All messaging features remain accessible without any payment gates"
       ]
     },
     {
-      "id": "REQ-8",
-      "text": "Add a delete button to each message that allows users to delete their own messages",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "قابلیت پاک کردن پیام برای کابران"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A delete button appears on messages sent by the current user",
-        "Clicking the delete button removes the message from the message list",
-        "The message is permanently deleted from backend storage",
-        "Other users cannot see deleted messages after refresh",
-        "Users cannot delete messages sent by other users"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Add an edit button to each message that allows users to edit their own messages",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "ویرایش کردن پیام کاربران"
-        ]
-      },
-      "acceptanceCriteria": [
-        "An edit button appears on messages sent by the current user",
-        "Clicking the edit button enables inline editing of the message content",
-        "Users can save the edited message or cancel the edit",
-        "The edited message is updated in backend storage",
-        "Other users see the updated message content after refresh",
-        "Users cannot edit messages sent by other users"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Extend the backend Message type to include a unique message ID field for identifying individual messages",
+      "id": "REQ-14",
+      "text": "Remove any subscription or payment-related backend logic, data models, and API endpoints",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-final"
+        ],
+        "quotes": [
+          "اشتراک را بردار و کلا رایگان کن برای همه"
         ]
       },
       "acceptanceCriteria": [
-        "Each message has a unique identifier that persists across operations",
-        "The message ID is returned when fetching messages",
-        "The message ID can be used to reference specific messages for edit and delete operations"
+        "No subscription state or payment tracking exists in the backend data models",
+        "All users have equal access to all messaging functionality without subscription checks"
       ]
     },
     {
-      "id": "REQ-11",
-      "text": "Implement backend functions for deleting a message by ID and editing a message's content by ID",
-      "target": "backend",
+      "id": "REQ-15",
+      "text": "Ensure all messaging features (send, edit, delete) are available to all users without any restrictions",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-final"
+        ],
+        "quotes": [
+          "اشتراک را بردار و کلا رایگان کن برای همه"
         ]
       },
       "acceptanceCriteria": [
-        "A deleteMessage function accepts a message ID and removes it from storage",
-        "An editMessage function accepts a message ID and new content, updating the stored message",
-        "Both functions validate that the caller is the original sender before allowing the operation",
-        "Functions return appropriate success or error responses"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Create React Query hooks for delete and edit message operations with automatic cache invalidation",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A useDeleteMessage hook calls the backend delete function and invalidates the messages query",
-        "A useEditMessage hook calls the backend edit function and invalidates the messages query",
-        "Both hooks handle loading and error states appropriately",
-        "The message list refreshes automatically after successful operations"
+        "Every user can send unlimited messages",
+        "Every user can edit and delete their own messages without restrictions",
+        "No usage limits or feature gates are enforced"
       ]
     }
   ],
   "constraints": [
-    "Users can only edit or delete their own messages, not messages from other users",
-    "Message identification must work reliably across all operations",
-    "The username-based authentication system remains unchanged"
+    "Preserve existing username entry and messaging functionality",
+    "Do not modify the single-actor backend architecture",
+    "Do not change frontend/src/hooks/useInternetIdentity.ts or other immutable paths"
   ],
   "nonGoals": [
-    "Adding true authentication or user accounts",
-    "Implementing message history or audit trails for edits",
-    "Adding confirmation dialogs for delete operations",
-    "Supporting bulk operations on multiple messages"
+    "Adding authentication or user accounts",
+    "Implementing new messaging features beyond removal of restrictions",
+    "Changing the visual design or branding"
   ],
   "imageRequirements": {
     "required": [],
