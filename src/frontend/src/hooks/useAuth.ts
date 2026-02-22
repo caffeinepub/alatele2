@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useActor } from './useActor';
-import { Role } from '../backend';
+import { UserRole } from '../backend';
 
 interface AuthState {
   username: string | null;
   displayName: string | null;
-  role: Role | null;
+  role: UserRole | null;
 }
 
 export function useAuth() {
@@ -27,32 +27,39 @@ export function useAuth() {
       setAuthState({
         username: storedUsername,
         displayName: storedDisplayName || storedUsername,
-        role: storedRole as Role,
+        role: storedRole as UserRole,
       });
     }
   }, []);
 
-  const loginAdmin = async (username: string, password: string, displayName?: string) => {
+  const loginAdmin = async (username: string, displayName?: string) => {
     if (!actor) throw new Error('Actor not initialized');
     
     setIsAuthenticating(true);
     try {
-      const isValid = await actor.authenticateAdmin(username, password);
+      // Call backend authentication method with username only
+      const isAuthenticated = await actor.authenticateAdmin(username);
       
-      if (!isValid) {
+      if (!isAuthenticated) {
         throw new Error('Invalid credentials');
       }
 
-      const finalDisplayName = displayName?.trim() || username;
-      
+      // Save user profile with display name if provided
+      if (displayName) {
+        await actor.saveCallerUserProfile({
+          name: username,
+          displayName: displayName,
+        });
+      }
+
       sessionStorage.setItem('alatele2_username', username);
-      sessionStorage.setItem('alatele2_displayName', finalDisplayName);
-      sessionStorage.setItem('alatele2_role', Role.admin);
+      sessionStorage.setItem('alatele2_displayName', displayName || username);
+      sessionStorage.setItem('alatele2_role', UserRole.admin);
 
       setAuthState({
         username,
-        displayName: finalDisplayName,
-        role: Role.admin,
+        displayName: displayName || username,
+        role: UserRole.admin,
       });
 
       return true;
@@ -67,12 +74,12 @@ export function useAuth() {
   const loginGuest = (username: string) => {
     sessionStorage.setItem('alatele2_username', username);
     sessionStorage.setItem('alatele2_displayName', username);
-    sessionStorage.setItem('alatele2_role', Role.guest);
+    sessionStorage.setItem('alatele2_role', UserRole.guest);
 
     setAuthState({
       username,
       displayName: username,
-      role: Role.guest,
+      role: UserRole.guest,
     });
   };
 
@@ -88,8 +95,8 @@ export function useAuth() {
     });
   };
 
-  const isAdmin = authState.role === Role.admin;
-  const isGuest = authState.role === Role.guest;
+  const isAdmin = authState.role === UserRole.admin;
+  const isGuest = authState.role === UserRole.guest;
   const isAuthenticated = !!authState.username && !!authState.role;
 
   return {

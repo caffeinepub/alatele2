@@ -1,17 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Add dual login system with admin/guest authentication and audio messaging capability.
+**Goal:** Simplify authentication by removing passwords and implementing username-only login with admin display name support.
 
 **Planned changes:**
-- Create dual-section login page with Admin Login (username/password/optional display name) and Guest Login sections
-- Implement admin authentication in backend that validates only username 'Negin' and password 'Negin-Kish'
-- Add guest authentication flow that redirects to username selection without password requirement
-- Store user role (admin or guest) in session to control UI permissions
-- Add audio message recording capability with microphone access for all users
-- Extend backend message storage to support audio blob type alongside existing image and video types
-- Display audio messages with playback controls in message list
-- Restrict edit and delete functionality for all message types to admin users only
-- Update App.tsx to replace simple username check with dual login page as entry point
+- Remove password field from login page - users authenticate with username only
+- Allow guests to login with any username except 'Alaie' (reserved for admin)
+- Restrict admin access to username 'Alaie' only
+- Add Display Name input field on login page that appears only when username is 'Alaie'
+- Display admin's chosen Display Name (instead of 'Alaie') in chat messages, profile, and conversation list
 
-**User-visible outcome:** Users can log in as either admin (with credentials) or guest (username only), send text/image/video/audio messages, and admins can edit/delete any message while guests can only send messages.
+**User-visible outcome:** Users can log in with just a username. Guests use any name except 'Alaie'. Admins login as 'Alaie' and can optionally set a display name during login, which appears throughout the chat interface instead of their username.

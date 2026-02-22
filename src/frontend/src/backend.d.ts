@@ -20,7 +20,9 @@ export interface Message {
     content: string;
     audio?: ExternalBlob;
     video?: ExternalBlob;
-    sender: string;
+    file?: ExternalBlob;
+    recipient?: Principal;
+    sender: Principal;
     timestamp: Time;
     image?: ExternalBlob;
 }
@@ -28,19 +30,34 @@ export interface MessageInput {
     content: string;
     audio?: ExternalBlob;
     video?: ExternalBlob;
-    sender: string;
+    file?: ExternalBlob;
     image?: ExternalBlob;
 }
-export enum Role {
+export interface UserProfile {
+    displayName?: string;
+    name: string;
+}
+export enum UserRole {
     admin = "admin",
+    user = "user",
     guest = "guest"
 }
 export interface backendInterface {
-    authenticateAdmin(username: string, password: string): Promise<boolean>;
-    deleteMessage(id: bigint, role: Role): Promise<void>;
-    editMessage(id: bigint, newContent: string, role: Role): Promise<void>;
-    getAllMessages(): Promise<Array<Message>>;
-    getMessageById(id: bigint): Promise<Message>;
-    getMessagesBySender(sender: string): Promise<Array<Message>>;
-    sendMessage(data: MessageInput): Promise<bigint>;
+    addContact(newContact: Principal): Promise<void>;
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    authenticateAdmin(username: string): Promise<boolean>;
+    authenticateGuest(username: string): Promise<boolean>;
+    deleteMessageFile(messageId: bigint): Promise<void>;
+    editMessageFile(messageId: bigint, newFile: ExternalBlob | null): Promise<void>;
+    getAllMessagesForCaller(): Promise<Array<Message>>;
+    getCallerUserProfile(): Promise<UserProfile | null>;
+    getCallerUserRole(): Promise<UserRole>;
+    getContacts(): Promise<Array<Principal>>;
+    getPrivateMessages(withUser: Principal): Promise<Array<Message>>;
+    getPublicMessages(): Promise<Array<Message>>;
+    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    isCallerAdmin(): Promise<boolean>;
+    saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    sendMessage(content: string, recipient: Principal | null): Promise<bigint>;
+    sendMessageWithMedia(input: MessageInput, recipient: Principal | null): Promise<bigint>;
 }

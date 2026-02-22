@@ -16,7 +16,9 @@ export interface Message {
   'content' : string,
   'audio' : [] | [ExternalBlob],
   'video' : [] | [ExternalBlob],
-  'sender' : string,
+  'file' : [] | [ExternalBlob],
+  'recipient' : [] | [Principal],
+  'sender' : Principal,
   'timestamp' : Time,
   'image' : [] | [ExternalBlob],
 }
@@ -24,12 +26,14 @@ export interface MessageInput {
   'content' : string,
   'audio' : [] | [ExternalBlob],
   'video' : [] | [ExternalBlob],
-  'sender' : string,
+  'file' : [] | [ExternalBlob],
   'image' : [] | [ExternalBlob],
 }
-export type Role = { 'admin' : null } |
-  { 'guest' : null };
 export type Time = bigint;
+export interface UserProfile { 'displayName' : [] | [string], 'name' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -57,13 +61,27 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
-  'authenticateAdmin' : ActorMethod<[string, string], boolean>,
-  'deleteMessage' : ActorMethod<[bigint, Role], undefined>,
-  'editMessage' : ActorMethod<[bigint, string, Role], undefined>,
-  'getAllMessages' : ActorMethod<[], Array<Message>>,
-  'getMessageById' : ActorMethod<[bigint], Message>,
-  'getMessagesBySender' : ActorMethod<[string], Array<Message>>,
-  'sendMessage' : ActorMethod<[MessageInput], bigint>,
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addContact' : ActorMethod<[Principal], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'authenticateAdmin' : ActorMethod<[string], boolean>,
+  'authenticateGuest' : ActorMethod<[string], boolean>,
+  'deleteMessageFile' : ActorMethod<[bigint], undefined>,
+  'editMessageFile' : ActorMethod<[bigint, [] | [ExternalBlob]], undefined>,
+  'getAllMessagesForCaller' : ActorMethod<[], Array<Message>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getContacts' : ActorMethod<[], Array<Principal>>,
+  'getPrivateMessages' : ActorMethod<[Principal], Array<Message>>,
+  'getPublicMessages' : ActorMethod<[], Array<Message>>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'sendMessage' : ActorMethod<[string, [] | [Principal]], bigint>,
+  'sendMessageWithMedia' : ActorMethod<
+    [MessageInput, [] | [Principal]],
+    bigint
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

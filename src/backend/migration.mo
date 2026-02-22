@@ -1,49 +1,57 @@
 import Map "mo:core/Map";
+import Set "mo:core/Set";
 import Nat "mo:core/Nat";
+import Time "mo:core/Time";
 import Storage "blob-storage/Storage";
+import Principal "mo:core/Principal";
+import AccessControl "authorization/access-control";
+import Text "mo:core/Text";
 
 module {
-  type OldMessage = {
-    content : Text;
-    id : Nat;
-    image : ?Storage.ExternalBlob;
-    video : ?Storage.ExternalBlob;
-    sender : Text;
-    timestamp : Int;
+  type UserProfile = {
+    displayName : ?Text;
+    name : Text;
   };
 
-  type OldActor = {
-    messagesStore : Map.Map<Nat, OldMessage>;
-    nextMessageId : Nat;
-  };
-
-  type NewMessage = {
-    content : Text;
+  type Message = {
     id : Nat;
+    sender : Principal;
+    recipient : ?Principal;
+    content : Text;
+    timestamp : Time.Time;
     image : ?Storage.ExternalBlob;
     video : ?Storage.ExternalBlob;
     audio : ?Storage.ExternalBlob;
-    sender : Text;
-    timestamp : Int;
+    file : ?Storage.ExternalBlob;
+  };
+
+  type OldActor = {
+    nextMessageId : Nat;
+    messages : Map.Map<Nat, Message>;
+    adminContacts : Map.Map<Principal, Set.Set<Principal>>;
+    userProfiles : Map.Map<Principal, UserProfile>;
+    accessControlState : AccessControl.AccessControlState;
   };
 
   type NewActor = {
-    messagesStore : Map.Map<Nat, NewMessage>;
     nextMessageId : Nat;
+    messages : Map.Map<Nat, Message>;
+    adminContacts : Map.Map<Principal, Set.Set<Principal>>;
+    userProfiles : Map.Map<Principal, UserProfile>;
+    accessControlState : AccessControl.AccessControlState;
+    usernames : Map.Map<Principal, Text>;
+    adminPrincipal : ?Principal;
   };
 
   public func run(old : OldActor) : NewActor {
-    let newMessagesStore = old.messagesStore.map<Nat, OldMessage, NewMessage>(
-      func(_id, oldMessage) {
-        {
-          oldMessage with
-          audio = null
-        };
-      }
-    );
     {
-      old with
-      messagesStore = newMessagesStore : Map.Map<Nat, NewMessage>;
+      nextMessageId = old.nextMessageId;
+      messages = old.messages;
+      adminContacts = old.adminContacts;
+      userProfiles = old.userProfiles;
+      accessControlState = old.accessControlState;
+      usernames = Map.empty<Principal, Text>();
+      adminPrincipal = null;
     };
   };
 };

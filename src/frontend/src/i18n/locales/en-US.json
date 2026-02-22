@@ -1,0 +1,124 @@
+{
+  "app": {
+    "name": "Alatele",
+    "tagline": "Connect and communicate securely",
+    "noMessages": "No messages yet",
+    "beFirst": "Be the first to send a message!",
+    "loading": "Loading..."
+  },
+  "login": {
+    "admin": {
+      "title": "Admin Login",
+      "description": "Access administrative features and manage contacts",
+      "username": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "button": "Login as Admin",
+      "loggingIn": "Logging in...",
+      "errorRequired": "Username and password are required",
+      "errorInvalid": "Invalid username or password"
+    },
+    "guest": {
+      "title": "Guest Access",
+      "description": "Join the conversation as a guest user",
+      "info": "No registration required. Start chatting instantly!",
+      "button": "Continue as Guest",
+      "features": "Guest Features",
+      "feature1": "Access public group chat",
+      "feature2": "Receive private messages from admins",
+      "feature3": "Share media and files"
+    }
+  },
+  "username": {
+    "title": "Welcome! Please enter your name to continue",
+    "placeholder": "Your name",
+    "displayNameLabel": "Display Name",
+    "displayNamePlaceholder": "How you want to appear",
+    "displayNameHint": "This will be shown in chats and your profile",
+    "optional": "optional",
+    "button": "Continue",
+    "saving": "Saving..."
+  },
+  "header": {
+    "loggedInAs": "Logged in as",
+    "logout": "Logout"
+  },
+  "message": {
+    "placeholder": "Type a message...",
+    "addImage": "Add image",
+    "addVideo": "Add video",
+    "addFile": "Add file",
+    "recordAudio": "Record audio",
+    "audioRecorded": "Audio recorded",
+    "uploading": "Uploading",
+    "sharedImage": "Shared image",
+    "videoNotSupported": "Your browser does not support video playback",
+    "audioNotSupported": "Your browser does not support audio playback",
+    "downloadFile": "Download file",
+    "edit": "Edit",
+    "editFile": "Edit file",
+    "delete": "Delete",
+    "deleteFile": "Delete file",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "audio": {
+    "recording": "Recording...",
+    "paused": "Paused",
+    "stopped": "Stopped",
+    "resume": "Resume",
+    "pause": "Pause",
+    "stop": "Stop",
+    "send": "Send",
+    "cancel": "Cancel",
+    "permissionError": "Microphone access denied. Please enable microphone permissions in your browser settings.",
+    "errorOccurred": "An error occurred while recording audio."
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "title": "Admin Panel",
+    "description": "Manage contacts and system settings",
+    "contacts": "Contact Manager",
+    "contactsDescription": "Add and manage your contacts",
+    "settings": "Settings",
+    "settingsDescription": "Change password and preferences",
+    "backToChat": "Back to Chat",
+    "password": {
+      "title": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password",
+      "button": "Change Password",
+      "changing": "Changing...",
+      "success": "Password changed successfully!",
+      "errorMatch": "Passwords do not match",
+      "errorLength": "Password must be at least 6 characters",
+      "errorGeneral": "Failed to change password. Please try again."
+    }
+  },
+  "contacts": {
+    "manage": "Manage Contacts",
+    "title": "Contact Manager",
+    "description": "Add users to your contact list to start private conversations",
+    "current": "Current Contacts",
+    "available": "Available Users",
+    "noContacts": "No contacts yet",
+    "noContactsDescription": "Add users from the available list below",
+    "noUsers": "No available users",
+    "noUsersDescription": "Users will appear here once they join the chat",
+    "add": "Add Contact",
+    "adding": "Adding...",
+    "backToMessages": "Back to Messages"
+  },
+  "chat": {
+    "groupChat": "Group Chat",
+    "privateMessages": "Private Messages",
+    "privateConversation": "Private conversation",
+    "conversationsDescription": "Your private conversations",
+    "noConversations": "No conversations yet",
+    "noConversationsAdmin": "Add contacts to start private conversations",
+    "noConversationsGuest": "Wait for an admin to add you as a contact",
+    "mediaMessage": "Media message"
+  }
+}

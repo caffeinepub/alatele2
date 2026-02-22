@@ -1,124 +1,79 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T15:32:49.272Z",
+  "generatedAt": "2026-02-22T03:32:51.546Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 10,
-    "implemented": 8,
+    "total": 5,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Create a dual-section login page with two distinct areas: Admin Login and Guest Login",
+        "summary": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DualLoginPage.tsx"
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/hooks/useAuth.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/DualLoginPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-10",
-        "summary": "Update App.tsx to replace simple username check with dual login page as entry point",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/components/Header.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/components/Header.tsx"
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/hooks/useAuth.ts"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Implement admin authentication in backend that validates username 'Negin' and password 'Negin-Kish' only",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/contexts/LanguageContext.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/contexts/LanguageContext.tsx"
+        ]
       },
       {
         "id": "REQ-3",
-        "summary": "Add optional display name field to admin login section that can be used alongside credentials",
+        "summary": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DualLoginPage.tsx"
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/hooks/useAuth.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/DualLoginPage.tsx"
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/hooks/useAuth.ts"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Implement guest authentication flow that redirects to username selection without password requirement",
+        "summary": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DualLoginPage.tsx"
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/contexts/LanguageContext.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DualLoginPage.tsx"
+          "frontend/src/components/DualLoginPage.tsx",
+          "frontend/src/contexts/LanguageContext.tsx"
         ]
       },
       {
         "id": "REQ-5",
-        "summary": "Store user role (admin or guest) in session and frontend state to control UI permissions",
-        "status": "implemented",
+        "summary": "Display admin's Display Name in chat messages, profile, and conversation list - show the admin's chosen display name instead of username 'Alaie' throughout the application",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/hooks/useAuth.ts",
-          "frontend/src/components/MessageList.tsx"
+          "frontend/src/components/MessageList.tsx",
+          "frontend/src/components/Header.tsx",
+          "frontend/src/components/ChatNavigation.tsx",
+          "frontend/src/components/ConversationList.tsx",
+          "frontend/src/components/PrivateConversation.tsx"
         ],
-        "matchedFiles": [
-          "frontend/src/hooks/useAuth.ts",
-          "frontend/src/components/MessageList.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add audio message recording capability with microphone access for all users",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AudioRecorder.tsx",
-          "frontend/src/components/MessageInput.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AudioRecorder.tsx",
-          "frontend/src/components/MessageInput.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Extend backend message storage to support audio blob type alongside existing image and video types",
-        "status": "unknown",
-        "plannedFiles": [],
         "matchedFiles": []
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Display audio messages with playback controls in message list for all users",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/MessageList.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/MessageList.tsx"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Restrict edit and delete functionality for all message types (text, image, video, audio) to admin users only",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useMessages.ts",
-          "frontend/src/components/MessageList.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useMessages.ts",
-          "frontend/src/components/MessageList.tsx"
-        ]
       }
     ]
   },
@@ -129,19 +84,14 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/AudioRecorder.tsx",
     "frontend/src/components/DualLoginPage.tsx",
-    "frontend/src/components/Header.tsx",
-    "frontend/src/components/MessageInput.tsx",
-    "frontend/src/components/MessageList.tsx",
-    "frontend/src/components/MessagingInterface.tsx",
+    "frontend/src/components/UsernameEntry.tsx",
+    "frontend/src/contexts/LanguageContext.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useAuth.ts",
-    "frontend/src/hooks/useMessages.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

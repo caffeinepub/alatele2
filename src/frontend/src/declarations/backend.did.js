@@ -19,7 +19,11 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
-export const Role = IDL.Variant({ 'admin' : IDL.Null, 'guest' : IDL.Null });
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
 export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const Time = IDL.Int;
 export const Message = IDL.Record({
@@ -27,15 +31,21 @@ export const Message = IDL.Record({
   'content' : IDL.Text,
   'audio' : IDL.Opt(ExternalBlob),
   'video' : IDL.Opt(ExternalBlob),
-  'sender' : IDL.Text,
+  'file' : IDL.Opt(ExternalBlob),
+  'recipient' : IDL.Opt(IDL.Principal),
+  'sender' : IDL.Principal,
   'timestamp' : Time,
   'image' : IDL.Opt(ExternalBlob),
+});
+export const UserProfile = IDL.Record({
+  'displayName' : IDL.Opt(IDL.Text),
+  'name' : IDL.Text,
 });
 export const MessageInput = IDL.Record({
   'content' : IDL.Text,
   'audio' : IDL.Opt(ExternalBlob),
   'video' : IDL.Opt(ExternalBlob),
-  'sender' : IDL.Text,
+  'file' : IDL.Opt(ExternalBlob),
   'image' : IDL.Opt(ExternalBlob),
 });
 
@@ -66,13 +76,36 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-  'authenticateAdmin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
-  'deleteMessage' : IDL.Func([IDL.Nat, Role], [], []),
-  'editMessage' : IDL.Func([IDL.Nat, IDL.Text, Role], [], []),
-  'getAllMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
-  'getMessageById' : IDL.Func([IDL.Nat], [Message], ['query']),
-  'getMessagesBySender' : IDL.Func([IDL.Text], [IDL.Vec(Message)], ['query']),
-  'sendMessage' : IDL.Func([MessageInput], [IDL.Nat], []),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addContact' : IDL.Func([IDL.Principal], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'authenticateAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'authenticateGuest' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteMessageFile' : IDL.Func([IDL.Nat], [], []),
+  'editMessageFile' : IDL.Func([IDL.Nat, IDL.Opt(ExternalBlob)], [], []),
+  'getAllMessagesForCaller' : IDL.Func([], [IDL.Vec(Message)], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getContacts' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+  'getPrivateMessages' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(Message)],
+      ['query'],
+    ),
+  'getPublicMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'sendMessage' : IDL.Func([IDL.Text, IDL.Opt(IDL.Principal)], [IDL.Nat], []),
+  'sendMessageWithMedia' : IDL.Func(
+      [MessageInput, IDL.Opt(IDL.Principal)],
+      [IDL.Nat],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
@@ -89,7 +122,11 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
-  const Role = IDL.Variant({ 'admin' : IDL.Null, 'guest' : IDL.Null });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
   const ExternalBlob = IDL.Vec(IDL.Nat8);
   const Time = IDL.Int;
   const Message = IDL.Record({
@@ -97,15 +134,21 @@ export const idlFactory = ({ IDL }) => {
     'content' : IDL.Text,
     'audio' : IDL.Opt(ExternalBlob),
     'video' : IDL.Opt(ExternalBlob),
-    'sender' : IDL.Text,
+    'file' : IDL.Opt(ExternalBlob),
+    'recipient' : IDL.Opt(IDL.Principal),
+    'sender' : IDL.Principal,
     'timestamp' : Time,
     'image' : IDL.Opt(ExternalBlob),
+  });
+  const UserProfile = IDL.Record({
+    'displayName' : IDL.Opt(IDL.Text),
+    'name' : IDL.Text,
   });
   const MessageInput = IDL.Record({
     'content' : IDL.Text,
     'audio' : IDL.Opt(ExternalBlob),
     'video' : IDL.Opt(ExternalBlob),
-    'sender' : IDL.Text,
+    'file' : IDL.Opt(ExternalBlob),
     'image' : IDL.Opt(ExternalBlob),
   });
   
@@ -136,13 +179,36 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-    'authenticateAdmin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
-    'deleteMessage' : IDL.Func([IDL.Nat, Role], [], []),
-    'editMessage' : IDL.Func([IDL.Nat, IDL.Text, Role], [], []),
-    'getAllMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
-    'getMessageById' : IDL.Func([IDL.Nat], [Message], ['query']),
-    'getMessagesBySender' : IDL.Func([IDL.Text], [IDL.Vec(Message)], ['query']),
-    'sendMessage' : IDL.Func([MessageInput], [IDL.Nat], []),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addContact' : IDL.Func([IDL.Principal], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'authenticateAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'authenticateGuest' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteMessageFile' : IDL.Func([IDL.Nat], [], []),
+    'editMessageFile' : IDL.Func([IDL.Nat, IDL.Opt(ExternalBlob)], [], []),
+    'getAllMessagesForCaller' : IDL.Func([], [IDL.Vec(Message)], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getContacts' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'getPrivateMessages' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(Message)],
+        ['query'],
+      ),
+    'getPublicMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'sendMessage' : IDL.Func([IDL.Text, IDL.Opt(IDL.Principal)], [IDL.Nat], []),
+    'sendMessageWithMedia' : IDL.Func(
+        [MessageInput, IDL.Opt(IDL.Principal)],
+        [IDL.Nat],
+        [],
+      ),
   });
 };
 

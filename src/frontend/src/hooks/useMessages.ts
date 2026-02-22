@@ -1,31 +1,21 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { useAuth } from './useAuth';
-import { type Message, type MessageInput, ExternalBlob, Role } from '../backend';
+import { type Message, type MessageInput, ExternalBlob } from '../backend';
+import { useInternetIdentity } from './useInternetIdentity';
 
 export function useMessages() {
   const { actor, isFetching: isActorFetching } = useActor();
+  const { identity } = useInternetIdentity();
   const queryClient = useQueryClient();
 
   const messagesQuery = useQuery<Message[]>({
-    queryKey: ['messages'],
+    queryKey: ['publicMessages'],
     queryFn: async () => {
       if (!actor) return [];
-      const allMessages = await actor.getAllMessages();
-      
-      // Filter out subscription/membership prompt messages
-      return allMessages.filter(message => {
-        const content = message.content.toLowerCase();
-        return !(
-          content.includes('membership') ||
-          content.includes('subscription') ||
-          content.includes('purchase') ||
-          content.includes('complex+')
-        );
-      });
+      return actor.getPublicMessages();
     },
     enabled: !!actor && !isActorFetching,
-    refetchInterval: 2000, // Poll every 2 seconds for new messages
+    refetchInterval: 2000,
   });
 
   const sendMessageMutation = useMutation({
@@ -34,105 +24,68 @@ export function useMessages() {
       content, 
       image, 
       video,
-      audio
+      audio,
+      file
     }: { 
       sender: string; 
       content: string; 
       image?: ExternalBlob; 
       video?: ExternalBlob;
       audio?: ExternalBlob;
+      file?: ExternalBlob;
     }) => {
       if (!actor) throw new Error('Actor not initialized');
       
-      const messageInput: MessageInput = {
-        sender,
-        content,
-        image,
-        video,
-        audio,
-      };
-      
-      const messageId = await actor.sendMessage(messageInput);
-      return messageId;
+      if (image || video || audio || file) {
+        const messageInput: MessageInput = {
+          content,
+          image,
+          video,
+          audio,
+          file,
+        };
+        return actor.sendMessageWithMedia(messageInput, null);
+      } else {
+        return actor.sendMessage(content, null);
+      }
     },
-    onMutate: async ({ sender, content, image, video, audio }) => {
-      // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['messages'] });
+    onMutate: async ({ sender, content, image, video, audio, file }) => {
+      await queryClient.cancelQueries({ queryKey: ['publicMessages'] });
 
-      // Snapshot the previous value
-      const previousMessages = queryClient.getQueryData<Message[]>(['messages']);
+      const previousMessages = queryClient.getQueryData<Message[]>(['publicMessages']);
 
-      // Optimistically update to the new value
       const optimisticMessage: Message = {
-        id: BigInt(Date.now()), // Temporary ID
-        sender,
+        id: BigInt(Date.now()),
+        sender: identity?.getPrincipal() || (sender as any),
         content,
         image,
         video,
         audio,
-        timestamp: BigInt(Date.now() * 1_000_000), // Convert to nanoseconds
+        file,
+        timestamp: BigInt(Date.now() * 1_000_000),
       };
 
-      queryClient.setQueryData<Message[]>(['messages'], (old) => 
+      queryClient.setQueryData<Message[]>(['publicMessages'], (old) => 
         [...(old || []), optimisticMessage]
       );
 
-      // Return a context object with the snapshotted value
       return { previousMessages };
     },
     onError: (err, variables, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousMessages) {
-        queryClient.setQueryData(['messages'], context.previousMessages);
+        queryClient.setQueryData(['publicMessages'], context.previousMessages);
       }
     },
     onSettled: () => {
-      // Always refetch after error or success to ensure consistency
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      queryClient.invalidateQueries({ queryKey: ['publicMessages'] });
     },
   });
 
   return {
     messages: messagesQuery.data || [],
     isLoading: messagesQuery.isLoading,
-    sendMessage: (sender: string, content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob) => 
-      sendMessageMutation.mutateAsync({ sender, content, image, video, audio }),
+    sendMessage: (sender: string, content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob, file?: ExternalBlob) => 
+      sendMessageMutation.mutateAsync({ sender, content, image, video, audio, file }),
     isSending: sendMessageMutation.isPending,
   };
-}
-
-export function useDeleteMessage() {
-  const { actor } = useActor();
-  const { role } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: bigint) => {
-      if (!actor) throw new Error('Actor not initialized');
-      if (!role) throw new Error('User role not found');
-      await actor.deleteMessage(id, role as Role);
-    },
-    onSuccess: () => {
-      // Invalidate and refetch messages after deleting
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
-    },
-  });
-}
-
-export function useEditMessage() {
-  const { actor } = useActor();
-  const { role } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, newContent }: { id: bigint; newContent: string }) => {
-      if (!actor) throw new Error('Actor not initialized');
-      if (!role) throw new Error('User role not found');
-      await actor.editMessage(id, newContent, role as Role);
-    },
-    onSuccess: () => {
-      // Invalidate and refetch messages after editing
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
-    },
-  });
 }

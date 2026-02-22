@@ -1,154 +1,127 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add dual login system with admin/guest authentication and audio messaging",
+  "title": "Remove password authentication and implement username-only login with admin display name support",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Create a dual-section login page with two distinct areas: Admin Login and Guest Login",
+      "summary": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
       "acceptanceCriteria": [
-        "Login page displays two clearly separated sections",
-        "Admin section contains fields for username, password, and optional display name",
-        "Guest section contains a button or link that navigates to username selection"
+        "Login page displays only username input field, no password field",
+        "Users can successfully authenticate with username only",
+        "Backend authentication logic updated to validate username without password"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/DualLoginPage.tsx",
-          "operation": "create",
-          "description": "Create a new dual-section login page component with two visually distinct areas: Admin Login section (left/top) with username, password, and optional display name fields; Guest Login section (right/bottom) with a button to navigate to username selection. Use shadcn/ui components for form inputs and buttons. Include Alatele branding consistent with UsernameEntry.tsx design."
+          "operation": "modify",
+          "description": "Remove password input field from admin login form. Update form to collect only username. Change form submission to call backend authenticateAdmin or authenticateGuest based on username validation (only 'Alaie' for admin, any other username for guest). Update UI to show single username field with appropriate labels and error handling for reserved username validation."
+        },
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "modify",
+          "description": "Update authentication logic to remove password-based authentication. Modify login functions to accept only username parameter. Update admin login to call backend authenticateAdmin(username) and guest login to call authenticateGuest(username). Remove password storage from sessionStorage. Update role detection to rely on backend username validation instead of password matching."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
+      "acceptanceCriteria": [
+        "Guest users can login with any username that is not 'Alaie'",
+        "Attempting to login as guest with username 'Alaie' is blocked with appropriate error message",
+        "Backend validates that 'Alaie' username is reserved for admin access only"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DualLoginPage.tsx",
+          "operation": "modify",
+          "description": "Add client-side validation to prevent username 'Alaie' when attempting guest login. Display error message when guest tries to use reserved admin username. Implement username validation logic that checks if entered username equals 'Alaie' and routes to appropriate authentication method (admin or guest). Show clear error feedback using translation keys from LanguageContext."
+        },
+        {
+          "path": "frontend/src/contexts/LanguageContext.tsx",
+          "operation": "modify",
+          "description": "Add translation keys for username validation errors including 'reservedUsernameError' message explaining that 'Alaie' is reserved for admin access. Add translations in both English and Farsi for error messaging when guests attempt to use reserved username."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Add optional display name field to admin login section that can be used alongside credentials",
+      "summary": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
       "acceptanceCriteria": [
-        "Admin login form includes an optional display name field",
-        "Display name is stored and associated with the admin session if provided",
-        "If no display name is provided, username 'Negin' is used as display name"
+        "Admin role is automatically assigned when username is 'Alaie'",
+        "Admin features and permissions are only available to users logged in as 'Alaie'",
+        "Backend role detection logic identifies admin based solely on username being 'Alaie'"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/DualLoginPage.tsx",
           "operation": "modify",
-          "description": "Include optional display name field in admin login form. Implement logic to store display name in session storage (key: 'alatele2_displayName') if provided, otherwise fall back to username 'Negin' as display name."
+          "description": "Update login form logic to automatically determine authentication type based on username. When username is exactly 'Alaie', call backend authenticateAdmin method. For any other username, call backend authenticateGuest method. Update UI feedback to reflect role-based authentication success."
+        },
+        {
+          "path": "frontend/src/hooks/useAuth.ts",
+          "operation": "modify",
+          "description": "Update role detection logic to rely on username matching 'Alaie' for admin access. Remove password-based role determination. Ensure admin role is set when authentication succeeds with username 'Alaie'. Update sessionStorage to store only username and role information."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Implement guest authentication flow that redirects to username selection without password requirement",
+      "summary": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
       "acceptanceCriteria": [
-        "Clicking guest login navigates to existing username selection interface",
-        "Guest users do not need to provide a password",
-        "Guest user role is stored in session"
+        "Display Name input field appears on login page when username entered is 'Alaie'",
+        "Display Name field is hidden for all other usernames (guest login)",
+        "Admin can set their display name during login which is saved to their profile",
+        "Display Name is optional - admin can login without entering it"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/DualLoginPage.tsx",
           "operation": "modify",
-          "description": "Add guest login button that triggers navigation to UsernameEntry component. Store guest role in session storage (key: 'alatele2_role', value: 'guest') before navigation. No password required for guest flow."
+          "description": "Add conditional display name input field that appears only when username field contains 'Alaie'. Implement onChange handler for username field that shows/hides display name input based on username value. Add state management for optional displayName field. On successful admin login, save user profile with displayName if provided using backend saveCallerUserProfile method. Ensure display name input is marked as optional in UI."
+        },
+        {
+          "path": "frontend/src/contexts/LanguageContext.tsx",
+          "operation": "modify",
+          "description": "Add translation keys for display name field label ('displayName'), placeholder text ('enterDisplayName'), and helper text ('displayNameOptional') in both English and Farsi. Include contextual help text explaining display name usage for admin users."
         }
       ]
     },
     {
       "id": "REQ-5",
-      "summary": "Store user role (admin or guest) in session and frontend state to control UI permissions",
+      "summary": "Display admin's Display Name in chat messages, profile, and conversation list - show the admin's chosen display name instead of username 'Alaie' throughout the application",
       "acceptanceCriteria": [
-        "User role is persisted in session storage alongside username",
-        "Role determines visibility of edit and delete buttons in message list",
-        "Role is checked before allowing edit/delete operations"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useAuth.ts",
-          "operation": "create",
-          "description": "Create custom React hook to manage authentication state including username, display name, and role (admin or guest). Read from and write to session storage keys: 'alatele2_username', 'alatele2_displayName', 'alatele2_role'. Export functions for login, logout, and role checking. Call backend authenticateAdmin function for admin login validation."
-        },
-        {
-          "path": "frontend/src/components/MessageList.tsx",
-          "operation": "modify",
-          "description": "Import useAuth hook and conditionally render edit/delete buttons only when user role is 'admin'. Hide edit/delete buttons for guest users. Replace current ownership check with role-based permission check."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Add audio message recording capability with microphone access for all users",
-      "acceptanceCriteria": [
-        "Message input includes a record audio button",
-        "Clicking button requests microphone permission",
-        "Users can record, preview, and send audio messages",
-        "Audio files are converted to blob format for backend storage"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AudioRecorder.tsx",
-          "operation": "create",
-          "description": "Create audio recorder component using browser MediaRecorder API. Implement record button, recording indicator, stop button, audio preview player, and convert recorded audio to Uint8Array blob format. Handle microphone permission requests and display permission errors. Return recorded audio blob to parent component via callback."
-        },
-        {
-          "path": "frontend/src/components/MessageInput.tsx",
-          "operation": "modify",
-          "description": "Import AudioRecorder component and add it to message input interface. Add state to track recorded audio blob. When audio is recorded, store it in component state and display preview. On form submission, include audio blob in MessageInput data using ExternalBlob.fromBytes(audioData). Clear audio state after send. Maintain parallel image/video upload logic."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Display audio messages with playback controls in message list for all users",
-      "acceptanceCriteria": [
-        "Audio messages render with HTML5 audio player controls",
-        "Playback works for all audio formats supported by browser",
-        "Audio messages display alongside text, image, and video messages"
+        "Admin's display name appears next to their messages in chat interface",
+        "Admin's display name is shown in their profile view",
+        "Admin's display name appears in conversation list",
+        "If no display name is set, fall back to showing username 'Alaie'"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/MessageList.tsx",
           "operation": "modify",
-          "description": "Add conditional rendering for audio messages. When message.audio exists, render HTML5 audio element with controls attribute. Use message.audio.getDirectURL() as audio source for streaming and caching. Display audio player inline with message content, similar to image/video display pattern."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Restrict edit and delete functionality for all message types (text, image, video, audio) to admin users only",
-      "acceptanceCriteria": [
-        "Edit and delete buttons only appear for admin users",
-        "Backend validates user role before processing edit/delete requests",
-        "Guest users can send all message types but cannot modify or delete any messages"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useMessages.ts",
-          "operation": "modify",
-          "description": "Modify deleteMessage and editMessage functions to include role parameter from useAuth hook. Pass Role enum value ('admin' or 'guest') to backend deleteMessage and editMessage functions. Handle permission errors gracefully."
-        },
-        {
-          "path": "frontend/src/components/MessageList.tsx",
-          "operation": "modify",
-          "description": "Update edit/delete button rendering to check role from useAuth hook. Only display edit/delete buttons when role is 'admin'. Remove per-message ownership check and replace with global role check. Apply to all message types (text, image, video, audio)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Update App.tsx to replace simple username check with dual login page as entry point",
-      "acceptanceCriteria": [
-        "App.tsx renders dual login page when no authenticated session exists",
-        "Session includes both username and user role",
-        "Successful authentication navigates to messaging interface"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Import DualLoginPage and useAuth hook. Replace current username-only session check with authentication check from useAuth. Render DualLoginPage when user is not authenticated. Render MessagingInterface when user is authenticated (either admin or guest). Remove direct UsernameEntry rendering; guest flow now routes through DualLoginPage first."
+          "description": "Update message rendering to display user's displayName from UserProfile when available, falling back to the username field if displayName is not set. Ensure getUserProfile hook fetches complete UserProfile including displayName field. Update avatar and author name display logic to prioritize displayName over username for admin users."
         },
         {
           "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Import useAuth hook and display user's display name instead of username. Update logout button to call useAuth logout function which clears username, displayName, and role from session storage."
+          "description": "Update user info display to show displayName from UserProfile when available, with fallback to username. Fetch current user profile using getCallerUserProfile and render displayName field if present. Ensure proper display for both admin (with optional displayName) and guest users (username only)."
+        },
+        {
+          "path": "frontend/src/components/ChatNavigation.tsx",
+          "operation": "modify",
+          "description": "Update user profile display in navigation header to show displayName when available. Fetch UserProfile using getCallerUserProfile hook and render displayName field with fallback to username. Ensure consistent display name handling across navigation component."
+        },
+        {
+          "path": "frontend/src/components/ConversationList.tsx",
+          "operation": "modify",
+          "description": "Update conversation list to display contact displayName from UserProfile instead of username when available. Ensure getUserProfile is called for each contact to fetch their complete profile including displayName. Update conversation preview to show displayName for admin contacts, falling back to username if displayName is not set."
+        },
+        {
+          "path": "frontend/src/components/PrivateConversation.tsx",
+          "operation": "modify",
+          "description": "Update conversation header to display contact's displayName from UserProfile when available, with fallback to username. Fetch contact profile using getUserProfile hook and render displayName in header. Ensure consistent display name usage in private conversation context."
         }
       ]
     }

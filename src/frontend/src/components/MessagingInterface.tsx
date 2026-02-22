@@ -1,18 +1,15 @@
 import { useEffect, useRef } from 'react';
-import Header from './Header';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useMessages } from '../hooks/useMessages';
 import { useAuth } from '../hooks/useAuth';
 import { ExternalBlob } from '../backend';
+import { useLanguage } from '../contexts/LanguageContext';
 
-interface MessagingInterfaceProps {
-  onLogout: () => void;
-}
-
-export default function MessagingInterface({ onLogout }: MessagingInterfaceProps) {
-  const { username, displayName } = useAuth();
+export default function MessagingInterface() {
   const { messages, isLoading, sendMessage, isSending } = useMessages();
+  const { displayName } = useAuth();
+  const { t } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const previousMessageCountRef = useRef(messages.length);
 
@@ -21,38 +18,32 @@ export default function MessagingInterface({ onLogout }: MessagingInterfaceProps
   };
 
   useEffect(() => {
-    // Auto-scroll when messages change
     if (messages.length > previousMessageCountRef.current) {
       scrollToBottom();
     }
     previousMessageCountRef.current = messages.length;
   }, [messages.length]);
 
-  const handleSendMessage = async (content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob) => {
-    if (username) {
-      await sendMessage(displayName || username, content, image, video, audio);
-      // Immediate scroll after sending
-      setTimeout(scrollToBottom, 100);
-    }
+  const handleSendMessage = async (content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob, file?: ExternalBlob) => {
+    await sendMessage(displayName || 'Anonymous', content, image, video, audio, file);
+    setTimeout(scrollToBottom, 100);
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center p-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading messages...</p>
+          <p className="text-muted-foreground">{t('app.loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-accent/5">
-      <Header onLogout={onLogout} />
-      
+    <>
       <main className="flex-1 overflow-y-auto px-4 py-6">
-        <MessageList messages={messages} currentUsername={displayName || username || ''} />
+        <MessageList messages={messages} currentUsername={displayName || ''} />
         <div ref={messagesEndRef} />
       </main>
 
@@ -61,6 +52,6 @@ export default function MessagingInterface({ onLogout }: MessagingInterfaceProps
           <MessageInput onSend={handleSendMessage} isSending={isSending} />
         </div>
       </div>
-    </div>
+    </>
   );
 }

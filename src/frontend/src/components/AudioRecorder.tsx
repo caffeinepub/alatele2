@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, Square, Play, Pause, Trash2, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface AudioRecorderProps {
   onRecordingComplete: (audioBlob: Uint8Array) => void;
@@ -16,6 +17,7 @@ export default function AudioRecorder({ onRecordingComplete, onCancel, disabled 
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [permissionError, setPermissionError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -68,7 +70,7 @@ export default function AudioRecorder({ onRecordingComplete, onCancel, disabled 
       }, 1000);
     } catch (error) {
       console.error('Error accessing microphone:', error);
-      setPermissionError('Microphone access denied. Please allow microphone access to record audio.');
+      setPermissionError(t('audio.permissionError'));
     }
   };
 
@@ -135,7 +137,7 @@ export default function AudioRecorder({ onRecordingComplete, onCancel, disabled 
           size="sm"
           onClick={onCancel}
         >
-          Cancel
+          {t('message.cancel')}
         </Button>
       </div>
     );
@@ -162,7 +164,7 @@ export default function AudioRecorder({ onRecordingComplete, onCancel, disabled 
         </Button>
 
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-medium">Audio Message</div>
+          <div className="text-sm font-medium">{t('audio.audioMessage')}</div>
           <div className="text-xs text-muted-foreground">{formatTime(recordingTime)}</div>
         </div>
 
@@ -198,7 +200,7 @@ export default function AudioRecorder({ onRecordingComplete, onCancel, disabled 
         )} />
         
         <div className="flex-1">
-          <div className="text-sm font-medium">Recording...</div>
+          <div className="text-sm font-medium">{t('audio.recording')}</div>
           <div className="text-xs text-muted-foreground">{formatTime(recordingTime)}</div>
         </div>
 
@@ -225,7 +227,7 @@ export default function AudioRecorder({ onRecordingComplete, onCancel, disabled 
       className="gap-2"
     >
       <Mic className="w-4 h-4" />
-      Record Audio
+      {t('audio.record')}
     </Button>
   );
 }

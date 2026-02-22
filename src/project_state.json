@@ -1,79 +1,44 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "A messenger application with dual login system: admin login (username: Negin, password: Negin-Kish) with full edit/delete permissions, and guest login (username selection only) with send-only permissions. All users can send text, image, video, and audio messages. Admins have complete access to edit and delete all messages. Display names shown in chat, profile, and next to messages.",
+  "summary": "Chat application with admin/guest system using username-only authentication",
   "architectural_notes": [
-    "Backend authentication for admin credentials (Negin/Negin-Kish)",
-    "File storage on Internet Computer for images, videos, and audio messages",
-    "Role-based access control: admin (full permissions) vs guest (send-only)",
-    "Message refresh mechanism (non-real-time)"
+    "Authentication uses username only (no password)",
+    "Admin role determined by username 'Alaie'",
+    "Display Name feature exclusive to admin users"
   ],
-  "known_issues": [
-    "No real-time messaging - messages load on page refresh or at intervals"
-  ],
+  "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-a-dual-section-login-page-with-two-distinct-areas-admin-login-and-guest-login",
-      "title": "Create a dual-section login page with two distinct areas: Admin Login and Guest Login",
+      "id": "feature-remove-password-field-from-login-page-implement-username-only-authentication-where-users-enter-only-their-username-to-log-in",
+      "title": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-optional-display-name-field-to-admin-login-section-that-can-be-used-alongside-credentials",
-      "title": "Add optional display name field to admin login section that can be used alongside credentials",
+      "id": "feature-allow-guests-to-login-with-any-username-except-alaie-prevent-guests-from-using-the-reserved-admin-username",
+      "title": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restrict-admin-login-to-username-alaie-only-admins-can-only-login-when-username-is-exactly-alaie",
+      "title": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-guest-authentication-flow-that-redirects-to-username-selection-without-password-requirement",
-      "title": "Implement guest authentication flow that redirects to username selection without password requirement",
+      "id": "feature-add-display-name-field-in-login-page-for-admins-only-show-display-name-input-field-when-username-is-alaie-to-allow-admins-to-set-their-display-name-during-login",
+      "title": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
       "reqIds": [
         "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-store-user-role-admin-or-guest-in-session-and-frontend-state-to-control-ui-permissions",
-      "title": "Store user role (admin or guest) in session and frontend state to control UI permissions",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-audio-message-recording-capability-with-microphone-access-for-all-users",
-      "title": "Add audio message recording capability with microphone access for all users",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-display-audio-messages-with-playback-controls-in-message-list-for-all-users",
-      "title": "Display audio messages with playback controls in message list for all users",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-restrict-edit-and-delete-functionality-for-all-message-types-text-image-video-audio-to-admin-users-only",
-      "title": "Restrict edit and delete functionality for all message types (text, image, video, audio) to admin users only",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-app-tsx-to-replace-simple-username-check-with-dual-login-page-as-entry-point",
-      "title": "Update App.tsx to replace simple username check with dual login page as entry point",
-      "reqIds": [
-        "REQ-10"
       ],
       "version": 1
     }
@@ -81,70 +46,44 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Dual login page with admin and guest sections",
+      "summary": "Remove password field from login page - username only authentication",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Admin authentication with username Negin and password Negin-Kish",
+      "summary": "Guests can login with any username except 'Alaie'",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Guest login with username selection (no password)",
+      "summary": "Admins login only with username 'Alaie'",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Optional display name field for admins",
+      "summary": "Add Display Name field in login page for admins only (username 'Alaie')",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-5",
-      "summary": "Message sending capability for all users (text, image, video, audio)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Admin-only edit and delete permissions for all messages",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "Display names shown in chat, profile, and next to messages",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Audio message recording and playback",
+      "summary": "Display admin's Display Name in chat, profile, and next to messages",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-10",
-      "summary": "Implement admin authentication in backend that validates username 'Negin' and password 'Negin-Kish' only",
+      "summary": "Display admin's Display Name in chat messages, profile, and conversation list - show the admin's chosen display name instead of username 'Alaie' throughout the application",
       "reqIds": [
-        "REQ-2"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-15",
-      "summary": "Extend backend message storage to support audio blob type alongside existing image and video types",
-      "reqIds": [
-        "REQ-7"
+        "REQ-5"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Alatele Messenger",
+  "projectName": "Alatele Chat",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
