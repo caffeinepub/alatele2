@@ -1,124 +1,58 @@
 {
   "app": {
     "name": "آلاتله",
-    "tagline": "ارتباط امن و مطمئن",
+    "tagline": "ارتباط امن و راحت",
+    "loading": "در حال بارگذاری...",
     "noMessages": "هنوز پیامی وجود ندارد",
-    "beFirst": "اولین نفری باشید که پیام می‌فرستد!",
-    "loading": "در حال بارگذاری..."
+    "beFirst": "اولین نفری باشید که پیام می‌فرستد!"
   },
   "login": {
-    "admin": {
-      "title": "ورود مدیر",
-      "description": "دسترسی به امکانات مدیریتی و مدیریت مخاطبین",
-      "username": "نام کاربری",
-      "usernamePlaceholder": "نام کاربری خود را وارد کنید",
-      "password": "رمز عبور",
-      "passwordPlaceholder": "رمز عبور خود را وارد کنید",
-      "button": "ورود به عنوان مدیر",
-      "loggingIn": "در حال ورود...",
-      "errorRequired": "نام کاربری و رمز عبور الزامی است",
-      "errorInvalid": "نام کاربری یا رمز عبور نامعتبر است"
-    },
-    "guest": {
-      "title": "دسترسی مهمان",
-      "description": "به عنوان کاربر مهمان به گفتگو بپیوندید",
-      "info": "نیازی به ثبت‌نام نیست. همین الان شروع کنید!",
-      "button": "ادامه به عنوان مهمان",
-      "features": "امکانات مهمان",
-      "feature1": "دسترسی به چت گروهی عمومی",
-      "feature2": "دریافت پیام خصوصی از مدیران",
-      "feature3": "اشتراک‌گذاری رسانه و فایل"
-    }
+    "title": "به آلاتله خوش آمدید",
+    "description": "با Internet Identity وارد شوید و شروع به چت کنید",
+    "button": "ورود",
+    "loggingIn": "در حال ورود...",
+    "info": "احراز هویت امن بدون رمز عبور",
+    "errorInvalid": "ورود ناموفق بود. لطفاً دوباره تلاش کنید.",
+    "displayNameRequired": "نام نمایشی الزامی است",
+    "errorSavingProfile": "ذخیره پروفایل ناموفق بود. لطفاً دوباره تلاش کنید."
   },
-  "username": {
-    "title": "خوش آمدید! لطفاً نام خود را وارد کنید",
-    "placeholder": "نام شما",
-    "displayNameLabel": "نام نمایشی",
-    "displayNamePlaceholder": "نحوه نمایش شما",
-    "displayNameHint": "این نام در چت‌ها و پروفایل شما نمایش داده می‌شود",
-    "optional": "اختیاری",
-    "button": "ادامه",
+  "profile": {
+    "setup": "تنظیم پروفایل شما",
+    "setupDescription": "نام نمایشی و عکس پروفایل خود را انتخاب کنید",
+    "displayName": "نام نمایشی",
+    "displayNamePlaceholder": "نام خود را وارد کنید",
+    "profilePicture": "عکس پروفایل",
+    "uploadPhoto": "آپلود عکس",
+    "changePhoto": "تغییر عکس",
+    "uploading": "در حال آپلود",
+    "photoHint": "JPG، PNG یا GIF (حداکثر 5 مگابایت)",
+    "invalidImageType": "لطفاً یک فایل تصویری معتبر انتخاب کنید",
+    "imageTooLarge": "حجم تصویر باید کمتر از 5 مگابایت باشد",
+    "uploadError": "آپلود تصویر ناموفق بود. لطفاً دوباره تلاش کنید.",
+    "continue": "ادامه",
     "saving": "در حال ذخیره..."
   },
   "header": {
     "loggedInAs": "وارد شده به عنوان",
     "logout": "خروج"
   },
-  "message": {
-    "placeholder": "پیام خود را بنویسید...",
-    "addImage": "افزودن تصویر",
-    "addVideo": "افزودن ویدیو",
-    "addFile": "افزودن فایل",
-    "recordAudio": "ضبط صدا",
-    "audioRecorded": "صدا ضبط شد",
-    "uploading": "در حال آپلود",
-    "sharedImage": "تصویر اشتراک‌گذاری شده",
-    "videoNotSupported": "مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند",
-    "audioNotSupported": "مرورگر شما از پخش صدا پشتیبانی نمی‌کند",
-    "downloadFile": "دانلود فایل",
-    "edit": "ویرایش",
-    "editFile": "ویرایش فایل",
-    "delete": "حذف",
-    "deleteFile": "حذف فایل",
-    "save": "ذخیره",
-    "cancel": "لغو"
-  },
-  "audio": {
-    "recording": "در حال ضبط...",
-    "paused": "متوقف شده",
-    "stopped": "متوقف شد",
-    "resume": "ادامه",
-    "pause": "توقف",
-    "stop": "پایان",
-    "send": "ارسال",
-    "cancel": "لغو",
-    "permissionError": "دسترسی به میکروفون رد شد. لطفاً دسترسی میکروفون را در تنظیمات مرورگر فعال کنید.",
-    "errorOccurred": "خطایی در هنگام ضبط صدا رخ داد."
-  },
-  "admin": {
-    "panel": "پنل مدیریت",
-    "title": "پنل مدیریت",
-    "description": "مدیریت مخاطبین و تنظیمات سیستم",
-    "contacts": "مدیریت مخاطبین",
-    "contactsDescription": "افزودن و مدیریت مخاطبین",
-    "settings": "تنظیمات",
-    "settingsDescription": "تغییر رمز عبور و تنظیمات",
-    "backToChat": "بازگشت به چت",
-    "password": {
-      "title": "تغییر رمز عبور",
-      "current": "رمز عبور فعلی",
-      "new": "رمز عبور جدید",
-      "confirm": "تأیید رمز عبور جدید",
-      "button": "تغییر رمز عبور",
-      "changing": "در حال تغییر...",
-      "success": "رمز عبور با موفقیت تغییر یافت!",
-      "errorMatch": "رمزهای عبور مطابقت ندارند",
-      "errorLength": "رمز عبور باید حداقل ۶ کاراکتر باشد",
-      "errorGeneral": "تغییر رمز عبور ناموفق بود. لطفاً دوباره تلاش کنید."
-    }
-  },
-  "contacts": {
-    "manage": "مدیریت مخاطبین",
-    "title": "مدیریت مخاطبین",
-    "description": "کاربران را به لیست مخاطبین خود اضافه کنید تا گفتگوی خصوصی شروع کنید",
-    "current": "مخاطبین فعلی",
-    "available": "کاربران موجود",
-    "noContacts": "هنوز مخاطبی وجود ندارد",
-    "noContactsDescription": "کاربران را از لیست زیر اضافه کنید",
-    "noUsers": "کاربر موجودی وجود ندارد",
-    "noUsersDescription": "کاربران پس از پیوستن به چت اینجا نمایش داده می‌شوند",
-    "add": "افزودن مخاطب",
-    "adding": "در حال افزودن...",
-    "backToMessages": "بازگشت به پیام‌ها"
-  },
   "chat": {
     "groupChat": "چت گروهی",
     "privateMessages": "پیام‌های خصوصی",
     "privateConversation": "گفتگوی خصوصی",
-    "conversationsDescription": "گفتگوهای خصوصی شما",
+    "messagePlaceholder": "پیام خود را بنویسید...",
     "noConversations": "هنوز گفتگویی وجود ندارد",
-    "noConversationsAdmin": "مخاطبین را اضافه کنید تا گفتگوی خصوصی شروع کنید",
-    "noConversationsGuest": "منتظر بمانید تا یک مدیر شما را به عنوان مخاطب اضافه کند",
+    "searchToStart": "برای شروع گفتگو، کاربران را جستجو کنید",
+    "conversationsDescription": "گفتگوهای خصوصی شما",
     "mediaMessage": "پیام رسانه‌ای"
+  },
+  "search": {
+    "placeholder": "جستجوی کاربران با نام...",
+    "noResults": "کاربری یافت نشد"
+  },
+  "language": {
+    "select": "انتخاب زبان",
+    "english": "English",
+    "farsi": "فارسی"
   }
 }

@@ -1,44 +1,29 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Chat application with admin/guest system using username-only authentication",
+  "summary": "Chat application with simple display name login (no profile photo upload), public and private messaging, contact management, and support for sending text, audio, files, images, and videos with editing and deletion capabilities. File upload limit: 50MB per file.",
   "architectural_notes": [
-    "Authentication uses username only (no password)",
-    "Admin role determined by username 'Alaie'",
-    "Display Name feature exclusive to admin users"
+    "No authentication system - users enter with display name only",
+    "File storage on Internet Computer with 50MB per file limit",
+    "Support for multiple media types: text, audio, images, videos, files",
+    "Both public chat room and private one-on-one messaging"
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-remove-password-field-from-login-page-implement-username-only-authentication-where-users-enter-only-their-username-to-log-in",
-      "title": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
+      "id": "feature-remove-the-profile-picture-upload-component-from-the-login-profile-setup-flow-in-loginpage-tsx",
+      "title": "Remove the profile picture upload component from the login/profile setup flow in LoginPage.tsx",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-allow-guests-to-login-with-any-username-except-alaie-prevent-guests-from-using-the-reserved-admin-username",
-      "title": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-restrict-admin-login-to-username-alaie-only-admins-can-only-login-when-username-is-exactly-alaie",
-      "title": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
+      "id": "feature-update-the-user-profile-mutation-hook-to-send-null-or-empty-string-for-profilepicture-when-creating-profiles",
+      "title": "Update the user profile mutation hook to send null or empty string for profilePicture when creating profiles",
       "reqIds": [
         "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-display-name-field-in-login-page-for-admins-only-show-display-name-input-field-when-username-is-alaie-to-allow-admins-to-set-their-display-name-during-login",
-      "title": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
-      "reqIds": [
-        "REQ-4"
       ],
       "version": 1
     }
@@ -46,44 +31,50 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Remove password field from login page - username only authentication",
+      "summary": "Remove profile photo upload capability from login screen",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Guests can login with any username except 'Alaie'",
+      "summary": "Simple login with display name only (no authentication)",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Admins login only with username 'Alaie'",
+      "summary": "Public and private chat functionality",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Add Display Name field in login page for admins only (username 'Alaie')",
+      "summary": "Contact management: create contacts and rename contacts",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-5",
-      "summary": "Display admin's Display Name in chat, profile, and next to messages",
+      "summary": "Send text, audio, files, images, and videos with 50MB file size limit",
       "reqIds": [],
       "status": "pending"
     },
     {
-      "id": "AR-10",
-      "summary": "Display admin's Display Name in chat messages, profile, and conversation list - show the admin's chosen display name instead of username 'Alaie' throughout the application",
+      "id": "AR-6",
+      "summary": "Edit and delete sent messages and files",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Update the backend createProfile method to accept only displayName without requiring profilePicture",
       "reqIds": [
-        "REQ-5"
+        "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Alatele Chat",
+  "projectName": "Alatele",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

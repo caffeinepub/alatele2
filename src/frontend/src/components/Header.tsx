@@ -1,33 +1,21 @@
 import { Button } from '@/components/ui/button';
-import { LogOut, Shield } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LogOut } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useActor } from '../hooks/useActor';
-import { useQuery } from '@tanstack/react-query';
-import { type UserProfile } from '../backend';
+import { useGetCallerUserProfile } from '../hooks/useQueries';
 import LanguageToggle from './LanguageToggle';
 
 interface HeaderProps {
   onLogout: () => void;
-  onNavigateToAdmin?: () => void;
 }
 
-export default function Header({ onLogout, onNavigateToAdmin }: HeaderProps) {
-  const { displayName, isAdmin } = useAuth();
+export default function Header({ onLogout }: HeaderProps) {
   const { t } = useLanguage();
-  const { actor } = useActor();
+  const { data: userProfile } = useGetCallerUserProfile();
 
-  const { data: userProfile } = useQuery<UserProfile | null>({
-    queryKey: ['currentUserProfile'],
-    queryFn: async () => {
-      if (!actor) return null;
-      return actor.getCallerUserProfile();
-    },
-    enabled: !!actor,
-  });
-
-  const username = userProfile?.name || displayName;
-  const showDisplayName = isAdmin && userProfile?.displayName;
+  const getInitials = (name: string) => {
+    return name.slice(0, 2).toUpperCase();
+  };
 
   return (
     <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
@@ -40,29 +28,31 @@ export default function Header({ onLogout, onNavigateToAdmin }: HeaderProps) {
           />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{t('app.name')}</h1>
-            <div className="text-xs text-muted-foreground">
-              {showDisplayName && (
-                <div>{userProfile.displayName}</div>
-              )}
-              <div>{t('header.loggedInAs')} {username}</div>
-            </div>
+            {userProfile && (
+              <div className="text-xs text-muted-foreground">
+                {t('header.loggedInAs')} {userProfile.displayName}
+              </div>
+            )}
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          <LanguageToggle />
-          
-          {isAdmin && onNavigateToAdmin && (
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={onNavigateToAdmin}
-              className="gap-2"
-            >
-              <Shield className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('admin.panel')}</span>
-            </Button>
+          {userProfile && (
+            <Avatar className="w-8 h-8">
+              {userProfile.profilePicture ? (
+                <AvatarImage 
+                  src={userProfile.profilePicture.getDirectURL()} 
+                  alt={userProfile.displayName} 
+                />
+              ) : (
+                <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                  {getInitials(userProfile.displayName)}
+                </AvatarFallback>
+              )}
+            </Avatar>
           )}
+          
+          <LanguageToggle />
           
           <Button 
             variant="ghost" 

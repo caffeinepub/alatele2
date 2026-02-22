@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { LogOut, Shield, MessageSquare, Users } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LogOut, MessageSquare, Users } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useActor } from '../hooks/useActor';
-import { useQuery } from '@tanstack/react-query';
-import { type UserProfile } from '../backend';
+import { useGetCallerUserProfile } from '../hooks/useQueries';
 import LanguageToggle from './LanguageToggle';
 
 interface ChatNavigationProps {
@@ -12,7 +11,6 @@ interface ChatNavigationProps {
   onNavigateToGroupChat: () => void;
   onNavigateToPrivateMessages: () => void;
   onLogout: () => void;
-  onNavigateToAdmin?: () => void;
 }
 
 export default function ChatNavigation({
@@ -20,28 +18,18 @@ export default function ChatNavigation({
   onNavigateToGroupChat,
   onNavigateToPrivateMessages,
   onLogout,
-  onNavigateToAdmin,
 }: ChatNavigationProps) {
-  const { displayName, isAdmin } = useAuth();
   const { t } = useLanguage();
-  const { actor } = useActor();
+  const { data: userProfile } = useGetCallerUserProfile();
 
-  const { data: userProfile } = useQuery<UserProfile | null>({
-    queryKey: ['currentUserProfile'],
-    queryFn: async () => {
-      if (!actor) return null;
-      return actor.getCallerUserProfile();
-    },
-    enabled: !!actor,
-  });
-
-  const displayNameToShow = userProfile?.displayName || displayName;
-  const username = userProfile?.name || displayName;
+  const getInitials = (name: string) => {
+    return name.slice(0, 2).toUpperCase();
+  };
 
   return (
     <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 py-4">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <img 
               src="/assets/generated/alatele-logo-transparent.dim_256x256.png" 
@@ -50,29 +38,31 @@ export default function ChatNavigation({
             />
             <div>
               <h1 className="text-2xl font-bold tracking-tight">{t('app.name')}</h1>
-              <div className="text-xs text-muted-foreground">
-                {userProfile?.displayName && (
-                  <div>{displayNameToShow}</div>
-                )}
-                <div>{t('header.loggedInAs')} {username}</div>
-              </div>
+              {userProfile && (
+                <div className="text-xs text-muted-foreground">
+                  {userProfile.displayName}
+                </div>
+              )}
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <LanguageToggle />
-            
-            {isAdmin && onNavigateToAdmin && (
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={onNavigateToAdmin}
-                className="gap-2"
-              >
-                <Shield className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('admin.panel')}</span>
-              </Button>
+            {userProfile && (
+              <Avatar className="w-8 h-8">
+                {userProfile.profilePicture ? (
+                  <AvatarImage 
+                    src={userProfile.profilePicture.getDirectURL()} 
+                    alt={userProfile.displayName} 
+                  />
+                ) : (
+                  <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                    {getInitials(userProfile.displayName)}
+                  </AvatarFallback>
+                )}
+              </Avatar>
             )}
+            
+            <LanguageToggle />
             
             <Button 
               variant="ghost" 
@@ -86,26 +76,26 @@ export default function ChatNavigation({
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Button
-            variant={currentView === 'group-chat' ? 'default' : 'outline'}
-            size="sm"
-            onClick={onNavigateToGroupChat}
-            className="gap-2 flex-1"
-          >
-            <Users className="w-4 h-4" />
-            {t('chat.groupChat')}
-          </Button>
-          <Button
-            variant={currentView === 'private-messages' ? 'default' : 'outline'}
-            size="sm"
-            onClick={onNavigateToPrivateMessages}
-            className="gap-2 flex-1"
-          >
-            <MessageSquare className="w-4 h-4" />
-            {t('chat.privateMessages')}
-          </Button>
-        </div>
+        <Tabs value={currentView} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger 
+              value="group-chat" 
+              onClick={onNavigateToGroupChat}
+              className="gap-2"
+            >
+              <MessageSquare className="w-4 h-4" />
+              {t('chat.groupChat')}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="private-messages" 
+              onClick={onNavigateToPrivateMessages}
+              className="gap-2"
+            >
+              <Users className="w-4 h-4" />
+              {t('chat.privateMessages')}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
     </header>
   );

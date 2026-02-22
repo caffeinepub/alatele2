@@ -1,13 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { useAuth } from './useAuth';
-import { type Message, type MessageInput, ExternalBlob } from '../backend';
+import { type Message, ExternalBlob } from '../backend';
 import { Principal } from '@dfinity/principal';
 import { useInternetIdentity } from './useInternetIdentity';
 
 export function usePrivateMessages(contact: Principal) {
   const { actor, isFetching: isActorFetching } = useActor();
-  const { displayName, username } = useAuth();
   const { identity } = useInternetIdentity();
   const queryClient = useQueryClient();
 
@@ -22,35 +20,11 @@ export function usePrivateMessages(contact: Principal) {
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: async ({ 
-      content, 
-      image, 
-      video,
-      audio,
-      file
-    }: { 
-      content: string; 
-      image?: ExternalBlob; 
-      video?: ExternalBlob;
-      audio?: ExternalBlob;
-      file?: ExternalBlob;
-    }) => {
+    mutationFn: async (content: string) => {
       if (!actor) throw new Error('Actor not initialized');
-      
-      if (image || video || audio || file) {
-        const messageInput: MessageInput = {
-          content,
-          image,
-          video,
-          audio,
-          file,
-        };
-        return actor.sendMessageWithMedia(messageInput, contact);
-      } else {
-        return actor.sendMessage(content, contact);
-      }
+      return actor.sendMessage(content, contact);
     },
-    onMutate: async ({ content, image, video, audio, file }) => {
+    onMutate: async (content) => {
       await queryClient.cancelQueries({ queryKey: ['privateMessages', contact.toString()] });
 
       const previousMessages = queryClient.getQueryData<Message[]>(['privateMessages', contact.toString()]);
@@ -60,10 +34,6 @@ export function usePrivateMessages(contact: Principal) {
         sender: identity?.getPrincipal() || Principal.anonymous(),
         recipient: contact,
         content,
-        image,
-        video,
-        audio,
-        file,
         timestamp: BigInt(Date.now() * 1_000_000),
       };
 
@@ -87,21 +57,19 @@ export function usePrivateMessages(contact: Principal) {
   return {
     messages: messagesQuery.data || [],
     isLoading: messagesQuery.isLoading,
-    sendPrivateMessage: (content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob, file?: ExternalBlob) => 
-      sendMessageMutation.mutateAsync({ content, image, video, audio, file }),
+    sendPrivateMessage: (content: string) => sendMessageMutation.mutateAsync(content),
     isSending: sendMessageMutation.isPending,
   };
 }
 
 export function useConversations() {
   const { actor, isFetching: isActorFetching } = useActor();
-  const { isAdmin } = useAuth();
   const { identity } = useInternetIdentity();
 
   const conversationsQuery = useQuery<Array<{
     contact: Principal;
     contactName: string;
-    contactDisplayName?: string;
+    profilePicture?: ExternalBlob;
     lastMessage: Message | null;
   }>>({
     queryKey: ['conversations'],
@@ -109,56 +77,47 @@ export function useConversations() {
       if (!actor || !identity) return [];
 
       const currentPrincipal = identity.getPrincipal();
-
-      // Get all messages for the caller
       const allMessages = await actor.getAllMessagesForCaller();
       
-      // Filter private messages only
       const privateMessages = allMessages.filter(msg => msg.recipient !== undefined);
 
-      // Group by contact
       const contactMap = new Map<string, Message[]>();
       
       for (const msg of privateMessages) {
-        // Determine the contact (the other person in the conversation)
         const contactPrincipal = msg.sender.toString() === currentPrincipal.toString()
           ? msg.recipient! 
           : msg.sender;
         
         const contactKey = contactPrincipal.toString();
-        
         if (!contactMap.has(contactKey)) {
           contactMap.set(contactKey, []);
         }
         contactMap.get(contactKey)!.push(msg);
       }
 
-      // Create conversation objects
       const conversations = await Promise.all(
         Array.from(contactMap.entries()).map(async ([contactKey, messages]) => {
           const contact = Principal.fromText(contactKey);
           const profile = await actor.getUserProfile(contact);
           
-          // Sort messages by timestamp and get the last one
           const sortedMessages = messages.sort((a, b) => 
-            Number(a.timestamp) - Number(b.timestamp)
+            Number(a.timestamp - b.timestamp)
           );
-          const lastMessage = sortedMessages[sortedMessages.length - 1];
+          const lastMessage = sortedMessages[sortedMessages.length - 1] || null;
 
           return {
             contact,
-            contactName: profile?.name || contactKey.slice(0, 8),
-            contactDisplayName: profile?.displayName,
+            contactName: profile?.displayName || contactKey.slice(0, 8),
+            profilePicture: profile?.profilePicture,
             lastMessage,
           };
         })
       );
 
-      // Sort conversations by last message timestamp
       return conversations.sort((a, b) => {
         if (!a.lastMessage) return 1;
         if (!b.lastMessage) return -1;
-        return Number(b.lastMessage.timestamp) - Number(a.lastMessage.timestamp);
+        return Number(b.lastMessage.timestamp - a.lastMessage.timestamp);
       });
     },
     enabled: !!actor && !isActorFetching && !!identity,

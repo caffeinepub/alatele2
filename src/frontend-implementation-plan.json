@@ -1,127 +1,36 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove password authentication and implement username-only login with admin display name support",
+  "title": "Remove profile picture upload from login screen",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
+      "summary": "Remove the profile picture upload component from the login/profile setup flow in LoginPage.tsx",
       "acceptanceCriteria": [
-        "Login page displays only username input field, no password field",
-        "Users can successfully authenticate with username only",
-        "Backend authentication logic updated to validate username without password"
+        "The ProfilePictureUpload component is no longer rendered in LoginPage.tsx",
+        "Users can complete login by entering only their display name",
+        "No profile picture field is visible during the setup flow"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/DualLoginPage.tsx",
+          "path": "frontend/src/components/LoginPage.tsx",
           "operation": "modify",
-          "description": "Remove password input field from admin login form. Update form to collect only username. Change form submission to call backend authenticateAdmin or authenticateGuest based on username validation (only 'Alaie' for admin, any other username for guest). Update UI to show single username field with appropriate labels and error handling for reserved username validation."
-        },
-        {
-          "path": "frontend/src/hooks/useAuth.ts",
-          "operation": "modify",
-          "description": "Update authentication logic to remove password-based authentication. Modify login functions to accept only username parameter. Update admin login to call backend authenticateAdmin(username) and guest login to call authenticateGuest(username). Remove password storage from sessionStorage. Update role detection to rely on backend username validation instead of password matching."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
-      "acceptanceCriteria": [
-        "Guest users can login with any username that is not 'Alaie'",
-        "Attempting to login as guest with username 'Alaie' is blocked with appropriate error message",
-        "Backend validates that 'Alaie' username is reserved for admin access only"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/DualLoginPage.tsx",
-          "operation": "modify",
-          "description": "Add client-side validation to prevent username 'Alaie' when attempting guest login. Display error message when guest tries to use reserved admin username. Implement username validation logic that checks if entered username equals 'Alaie' and routes to appropriate authentication method (admin or guest). Show clear error feedback using translation keys from LanguageContext."
-        },
-        {
-          "path": "frontend/src/contexts/LanguageContext.tsx",
-          "operation": "modify",
-          "description": "Add translation keys for username validation errors including 'reservedUsernameError' message explaining that 'Alaie' is reserved for admin access. Add translations in both English and Farsi for error messaging when guests attempt to use reserved username."
+          "description": "Remove the ProfilePictureUpload component import and its usage from the profile setup form. Remove the profilePicture state variable and its associated logic. Update the form to only collect displayName input. Ensure the profile creation flow works with displayName only."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
+      "summary": "Update the user profile mutation hook to send null or empty profilePicture when creating profiles",
       "acceptanceCriteria": [
-        "Admin role is automatically assigned when username is 'Alaie'",
-        "Admin features and permissions are only available to users logged in as 'Alaie'",
-        "Backend role detection logic identifies admin based solely on username being 'Alaie'"
+        "The profile creation mutation in useQueries.ts does not include profilePicture data",
+        "Profile creation succeeds without uploading an image"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/DualLoginPage.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Update login form logic to automatically determine authentication type based on username. When username is exactly 'Alaie', call backend authenticateAdmin method. For any other username, call backend authenticateGuest method. Update UI feedback to reflect role-based authentication success."
-        },
-        {
-          "path": "frontend/src/hooks/useAuth.ts",
-          "operation": "modify",
-          "description": "Update role detection logic to rely on username matching 'Alaie' for admin access. Remove password-based role determination. Ensure admin role is set when authentication succeeds with username 'Alaie'. Update sessionStorage to store only username and role information."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
-      "acceptanceCriteria": [
-        "Display Name input field appears on login page when username entered is 'Alaie'",
-        "Display Name field is hidden for all other usernames (guest login)",
-        "Admin can set their display name during login which is saved to their profile",
-        "Display Name is optional - admin can login without entering it"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/DualLoginPage.tsx",
-          "operation": "modify",
-          "description": "Add conditional display name input field that appears only when username field contains 'Alaie'. Implement onChange handler for username field that shows/hides display name input based on username value. Add state management for optional displayName field. On successful admin login, save user profile with displayName if provided using backend saveCallerUserProfile method. Ensure display name input is marked as optional in UI."
-        },
-        {
-          "path": "frontend/src/contexts/LanguageContext.tsx",
-          "operation": "modify",
-          "description": "Add translation keys for display name field label ('displayName'), placeholder text ('enterDisplayName'), and helper text ('displayNameOptional') in both English and Farsi. Include contextual help text explaining display name usage for admin users."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Display admin's Display Name in chat messages, profile, and conversation list - show the admin's chosen display name instead of username 'Alaie' throughout the application",
-      "acceptanceCriteria": [
-        "Admin's display name appears next to their messages in chat interface",
-        "Admin's display name is shown in their profile view",
-        "Admin's display name appears in conversation list",
-        "If no display name is set, fall back to showing username 'Alaie'"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MessageList.tsx",
-          "operation": "modify",
-          "description": "Update message rendering to display user's displayName from UserProfile when available, falling back to the username field if displayName is not set. Ensure getUserProfile hook fetches complete UserProfile including displayName field. Update avatar and author name display logic to prioritize displayName over username for admin users."
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Update user info display to show displayName from UserProfile when available, with fallback to username. Fetch current user profile using getCallerUserProfile and render displayName field if present. Ensure proper display for both admin (with optional displayName) and guest users (username only)."
-        },
-        {
-          "path": "frontend/src/components/ChatNavigation.tsx",
-          "operation": "modify",
-          "description": "Update user profile display in navigation header to show displayName when available. Fetch UserProfile using getCallerUserProfile hook and render displayName field with fallback to username. Ensure consistent display name handling across navigation component."
-        },
-        {
-          "path": "frontend/src/components/ConversationList.tsx",
-          "operation": "modify",
-          "description": "Update conversation list to display contact displayName from UserProfile instead of username when available. Ensure getUserProfile is called for each contact to fetch their complete profile including displayName. Update conversation preview to show displayName for admin contacts, falling back to username if displayName is not set."
-        },
-        {
-          "path": "frontend/src/components/PrivateConversation.tsx",
-          "operation": "modify",
-          "description": "Update conversation header to display contact's displayName from UserProfile when available, with fallback to username. Fetch contact profile using getUserProfile hook and render displayName in header. Ensure consistent display name usage in private conversation context."
+          "description": "Update the saveCallerUserProfile mutation to pass a UserProfile object with only displayName, omitting the profilePicture field entirely or passing undefined. Ensure the mutation works correctly without profile picture data and handles the backend response appropriately."
         }
       ]
     }

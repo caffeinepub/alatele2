@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { type Message, type MessageInput, ExternalBlob } from '../backend';
+import { type Message } from '../backend';
 import { useInternetIdentity } from './useInternetIdentity';
+import { Principal } from '@dfinity/principal';
 
 export function useMessages() {
   const { actor, isFetching: isActorFetching } = useActor();
@@ -19,49 +20,19 @@ export function useMessages() {
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: async ({ 
-      sender, 
-      content, 
-      image, 
-      video,
-      audio,
-      file
-    }: { 
-      sender: string; 
-      content: string; 
-      image?: ExternalBlob; 
-      video?: ExternalBlob;
-      audio?: ExternalBlob;
-      file?: ExternalBlob;
-    }) => {
+    mutationFn: async (content: string) => {
       if (!actor) throw new Error('Actor not initialized');
-      
-      if (image || video || audio || file) {
-        const messageInput: MessageInput = {
-          content,
-          image,
-          video,
-          audio,
-          file,
-        };
-        return actor.sendMessageWithMedia(messageInput, null);
-      } else {
-        return actor.sendMessage(content, null);
-      }
+      return actor.sendMessage(content, null);
     },
-    onMutate: async ({ sender, content, image, video, audio, file }) => {
+    onMutate: async (content) => {
       await queryClient.cancelQueries({ queryKey: ['publicMessages'] });
 
       const previousMessages = queryClient.getQueryData<Message[]>(['publicMessages']);
 
       const optimisticMessage: Message = {
         id: BigInt(Date.now()),
-        sender: identity?.getPrincipal() || (sender as any),
+        sender: identity?.getPrincipal() || Principal.anonymous(),
         content,
-        image,
-        video,
-        audio,
-        file,
         timestamp: BigInt(Date.now() * 1_000_000),
       };
 
@@ -84,8 +55,7 @@ export function useMessages() {
   return {
     messages: messagesQuery.data || [],
     isLoading: messagesQuery.isLoading,
-    sendMessage: (sender: string, content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob, file?: ExternalBlob) => 
-      sendMessageMutation.mutateAsync({ sender, content, image, video, audio, file }),
+    sendMessage: (content: string) => sendMessageMutation.mutateAsync(content),
     isSending: sendMessageMutation.isPending,
   };
 }

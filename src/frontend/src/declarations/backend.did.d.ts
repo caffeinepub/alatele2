@@ -14,23 +14,15 @@ export type ExternalBlob = Uint8Array;
 export interface Message {
   'id' : bigint,
   'content' : string,
-  'audio' : [] | [ExternalBlob],
-  'video' : [] | [ExternalBlob],
-  'file' : [] | [ExternalBlob],
   'recipient' : [] | [Principal],
   'sender' : Principal,
   'timestamp' : Time,
-  'image' : [] | [ExternalBlob],
-}
-export interface MessageInput {
-  'content' : string,
-  'audio' : [] | [ExternalBlob],
-  'video' : [] | [ExternalBlob],
-  'file' : [] | [ExternalBlob],
-  'image' : [] | [ExternalBlob],
 }
 export type Time = bigint;
-export interface UserProfile { 'displayName' : [] | [string], 'name' : string }
+export interface UserProfile {
+  'displayName' : string,
+  'profilePicture' : [] | [ExternalBlob],
+}
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
@@ -62,26 +54,16 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
-  'addContact' : ActorMethod<[Principal], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'authenticateAdmin' : ActorMethod<[string], boolean>,
-  'authenticateGuest' : ActorMethod<[string], boolean>,
-  'deleteMessageFile' : ActorMethod<[bigint], undefined>,
-  'editMessageFile' : ActorMethod<[bigint, [] | [ExternalBlob]], undefined>,
   'getAllMessagesForCaller' : ActorMethod<[], Array<Message>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
-  'getContacts' : ActorMethod<[], Array<Principal>>,
   'getPrivateMessages' : ActorMethod<[Principal], Array<Message>>,
   'getPublicMessages' : ActorMethod<[], Array<Message>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'sendMessage' : ActorMethod<[string, [] | [Principal]], bigint>,
-  'sendMessageWithMedia' : ActorMethod<
-    [MessageInput, [] | [Principal]],
-    bigint
-  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

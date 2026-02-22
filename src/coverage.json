@@ -1,79 +1,43 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-22T03:32:51.546Z",
+  "generatedAt": "2026-02-22T12:37:32.237Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
+        "summary": "Remove the profile picture upload component from the login/profile setup flow in LoginPage.tsx",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/hooks/useAuth.ts"
+          "frontend/src/components/LoginPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/hooks/useAuth.ts"
+          "frontend/src/components/LoginPage.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/contexts/LanguageContext.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/contexts/LanguageContext.tsx"
-        ]
+        "summary": "Update the backend createProfile method to accept only displayName without requiring profilePicture",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-3",
-        "summary": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
+        "summary": "Update the user profile mutation hook to send null or empty string for profilePicture when creating profiles",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/hooks/useAuth.ts"
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/hooks/useAuth.ts"
+          "frontend/src/hooks/useQueries.ts"
         ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/contexts/LanguageContext.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/DualLoginPage.tsx",
-          "frontend/src/contexts/LanguageContext.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Display admin's Display Name in chat messages, profile, and conversation list - show the admin's chosen display name instead of username 'Alaie' throughout the application",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/components/MessageList.tsx",
-          "frontend/src/components/Header.tsx",
-          "frontend/src/components/ChatNavigation.tsx",
-          "frontend/src/components/ConversationList.tsx",
-          "frontend/src/components/PrivateConversation.tsx"
-        ],
-        "matchedFiles": []
       }
     ]
   },
@@ -86,12 +50,15 @@
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/DualLoginPage.tsx",
-    "frontend/src/components/UsernameEntry.tsx",
-    "frontend/src/contexts/LanguageContext.tsx",
+    "frontend/src/components/ChatNavigation.tsx",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/components/LoginPage.tsx",
+    "frontend/src/components/MessageList.tsx",
+    "frontend/src/components/PrivateConversation.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useAuth.ts",
+    "frontend/src/hooks/usePrivateMessages.ts",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

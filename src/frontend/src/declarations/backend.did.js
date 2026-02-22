@@ -24,29 +24,18 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const Time = IDL.Int;
 export const Message = IDL.Record({
   'id' : IDL.Nat,
   'content' : IDL.Text,
-  'audio' : IDL.Opt(ExternalBlob),
-  'video' : IDL.Opt(ExternalBlob),
-  'file' : IDL.Opt(ExternalBlob),
   'recipient' : IDL.Opt(IDL.Principal),
   'sender' : IDL.Principal,
   'timestamp' : Time,
-  'image' : IDL.Opt(ExternalBlob),
 });
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const UserProfile = IDL.Record({
-  'displayName' : IDL.Opt(IDL.Text),
-  'name' : IDL.Text,
-});
-export const MessageInput = IDL.Record({
-  'content' : IDL.Text,
-  'audio' : IDL.Opt(ExternalBlob),
-  'video' : IDL.Opt(ExternalBlob),
-  'file' : IDL.Opt(ExternalBlob),
-  'image' : IDL.Opt(ExternalBlob),
+  'displayName' : IDL.Text,
+  'profilePicture' : IDL.Opt(ExternalBlob),
 });
 
 export const idlService = IDL.Service({
@@ -77,16 +66,10 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-  'addContact' : IDL.Func([IDL.Principal], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'authenticateAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
-  'authenticateGuest' : IDL.Func([IDL.Text], [IDL.Bool], []),
-  'deleteMessageFile' : IDL.Func([IDL.Nat], [], []),
-  'editMessageFile' : IDL.Func([IDL.Nat, IDL.Opt(ExternalBlob)], [], []),
   'getAllMessagesForCaller' : IDL.Func([], [IDL.Vec(Message)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getContacts' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
   'getPrivateMessages' : IDL.Func(
       [IDL.Principal],
       [IDL.Vec(Message)],
@@ -101,11 +84,6 @@ export const idlService = IDL.Service({
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'sendMessage' : IDL.Func([IDL.Text, IDL.Opt(IDL.Principal)], [IDL.Nat], []),
-  'sendMessageWithMedia' : IDL.Func(
-      [MessageInput, IDL.Opt(IDL.Principal)],
-      [IDL.Nat],
-      [],
-    ),
 });
 
 export const idlInitArgs = [];
@@ -127,29 +105,18 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const ExternalBlob = IDL.Vec(IDL.Nat8);
   const Time = IDL.Int;
   const Message = IDL.Record({
     'id' : IDL.Nat,
     'content' : IDL.Text,
-    'audio' : IDL.Opt(ExternalBlob),
-    'video' : IDL.Opt(ExternalBlob),
-    'file' : IDL.Opt(ExternalBlob),
     'recipient' : IDL.Opt(IDL.Principal),
     'sender' : IDL.Principal,
     'timestamp' : Time,
-    'image' : IDL.Opt(ExternalBlob),
   });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
   const UserProfile = IDL.Record({
-    'displayName' : IDL.Opt(IDL.Text),
-    'name' : IDL.Text,
-  });
-  const MessageInput = IDL.Record({
-    'content' : IDL.Text,
-    'audio' : IDL.Opt(ExternalBlob),
-    'video' : IDL.Opt(ExternalBlob),
-    'file' : IDL.Opt(ExternalBlob),
-    'image' : IDL.Opt(ExternalBlob),
+    'displayName' : IDL.Text,
+    'profilePicture' : IDL.Opt(ExternalBlob),
   });
   
   return IDL.Service({
@@ -180,16 +147,10 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-    'addContact' : IDL.Func([IDL.Principal], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'authenticateAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
-    'authenticateGuest' : IDL.Func([IDL.Text], [IDL.Bool], []),
-    'deleteMessageFile' : IDL.Func([IDL.Nat], [], []),
-    'editMessageFile' : IDL.Func([IDL.Nat, IDL.Opt(ExternalBlob)], [], []),
     'getAllMessagesForCaller' : IDL.Func([], [IDL.Vec(Message)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getContacts' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getPrivateMessages' : IDL.Func(
         [IDL.Principal],
         [IDL.Vec(Message)],
@@ -204,11 +165,6 @@ export const idlFactory = ({ IDL }) => {
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'sendMessage' : IDL.Func([IDL.Text, IDL.Opt(IDL.Principal)], [IDL.Nat], []),
-    'sendMessageWithMedia' : IDL.Func(
-        [MessageInput, IDL.Opt(IDL.Principal)],
-        [IDL.Nat],
-        [],
-      ),
   });
 };
 

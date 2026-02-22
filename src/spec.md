@@ -1,13 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Simplify authentication by removing passwords and implementing username-only login with admin display name support.
+**Goal:** Remove profile picture upload requirement from the login flow.
 
 **Planned changes:**
-- Remove password field from login page - users authenticate with username only
-- Allow guests to login with any username except 'Alaie' (reserved for admin)
-- Restrict admin access to username 'Alaie' only
-- Add Display Name input field on login page that appears only when username is 'Alaie'
-- Display admin's chosen Display Name (instead of 'Alaie') in chat messages, profile, and conversation list
+- Remove ProfilePictureUpload component from LoginPage.tsx
+- Update backend createProfile method to accept profiles without profile pictures
+- Modify frontend profile creation mutation to omit profilePicture data
 
-**User-visible outcome:** Users can log in with just a username. Guests use any name except 'Alaie'. Admins login as 'Alaie' and can optionally set a display name during login, which appears throughout the chat interface instead of their username.
+**User-visible outcome:** Users can complete login by entering only their display name, without needing to upload a profile picture.

@@ -18,24 +18,13 @@ export type Time = bigint;
 export interface Message {
     id: bigint;
     content: string;
-    audio?: ExternalBlob;
-    video?: ExternalBlob;
-    file?: ExternalBlob;
     recipient?: Principal;
     sender: Principal;
     timestamp: Time;
-    image?: ExternalBlob;
-}
-export interface MessageInput {
-    content: string;
-    audio?: ExternalBlob;
-    video?: ExternalBlob;
-    file?: ExternalBlob;
-    image?: ExternalBlob;
 }
 export interface UserProfile {
-    displayName?: string;
-    name: string;
+    displayName: string;
+    profilePicture?: ExternalBlob;
 }
 export enum UserRole {
     admin = "admin",
@@ -43,21 +32,14 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
-    addContact(newContact: Principal): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    authenticateAdmin(username: string): Promise<boolean>;
-    authenticateGuest(username: string): Promise<boolean>;
-    deleteMessageFile(messageId: bigint): Promise<void>;
-    editMessageFile(messageId: bigint, newFile: ExternalBlob | null): Promise<void>;
     getAllMessagesForCaller(): Promise<Array<Message>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getContacts(): Promise<Array<Principal>>;
     getPrivateMessages(withUser: Principal): Promise<Array<Message>>;
     getPublicMessages(): Promise<Array<Message>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     sendMessage(content: string, recipient: Principal | null): Promise<bigint>;
-    sendMessageWithMedia(input: MessageInput, recipient: Principal | null): Promise<bigint>;
 }

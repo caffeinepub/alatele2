@@ -1,45 +1,33 @@
 import { useState, useEffect } from 'react';
-import DualLoginPage from './components/DualLoginPage';
-import UsernameEntry from './components/UsernameEntry';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import LoginPage from './components/LoginPage';
 import MessagingInterface from './components/MessagingInterface';
-import AdminPanel from './components/AdminPanel';
 import ChatNavigation from './components/ChatNavigation';
 import ConversationList from './components/ConversationList';
 import PrivateConversation from './components/PrivateConversation';
-import { useAuth } from './hooks/useAuth';
+import { useInternetIdentity } from './hooks/useInternetIdentity';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { Principal } from '@dfinity/principal';
+import { useGetCallerUserProfile } from './hooks/useQueries';
 
-type View = 'messaging' | 'admin' | 'group-chat' | 'private-messages' | 'private-conversation';
+const queryClient = new QueryClient();
+
+type View = 'group-chat' | 'private-messages' | 'private-conversation';
 
 function AppContent() {
-  const { isAuthenticated, loginGuest, logout } = useAuth();
-  const [showGuestEntry, setShowGuestEntry] = useState(false);
+  const { identity, clear, isInitializing } = useInternetIdentity();
   const [currentView, setCurrentView] = useState<View>('group-chat');
   const [selectedContact, setSelectedContact] = useState<Principal | null>(null);
 
-  const handleGuestClick = () => {
-    setShowGuestEntry(true);
-  };
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
-  const handleGuestUsernameSubmit = (username: string) => {
-    loginGuest(username);
-    setShowGuestEntry(false);
-  };
+  const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
 
-  const handleLogout = () => {
-    logout();
-    setShowGuestEntry(false);
+  const handleLogout = async () => {
+    await clear();
+    queryClient.clear();
     setCurrentView('group-chat');
     setSelectedContact(null);
-  };
-
-  const handleNavigateToAdmin = () => {
-    setCurrentView('admin');
-  };
-
-  const handleBackToMessaging = () => {
-    setCurrentView('group-chat');
   };
 
   const handleNavigateToGroupChat = () => {
@@ -62,15 +50,19 @@ function AppContent() {
     setSelectedContact(null);
   };
 
-  if (!isAuthenticated) {
-    if (showGuestEntry) {
-      return <UsernameEntry onSubmit={handleGuestUsernameSubmit} />;
-    }
-    return <DualLoginPage onGuestClick={handleGuestClick} />;
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-accent/5">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
-  if (currentView === 'admin') {
-    return <AdminPanel onBack={handleBackToMessaging} />;
+  if (!isAuthenticated || (isAuthenticated && !profileLoading && isFetched && userProfile === null)) {
+    return <LoginPage />;
   }
 
   if (currentView === 'private-conversation' && selectedContact) {
@@ -79,7 +71,6 @@ function AppContent() {
         contact={selectedContact}
         onBack={handleBackToConversationList}
         onLogout={handleLogout}
-        onNavigateToAdmin={handleNavigateToAdmin}
       />
     );
   }
@@ -92,7 +83,6 @@ function AppContent() {
           onNavigateToGroupChat={handleNavigateToGroupChat}
           onNavigateToPrivateMessages={handleNavigateToPrivateMessages}
           onLogout={handleLogout}
-          onNavigateToAdmin={handleNavigateToAdmin}
         />
         <ConversationList onSelectConversation={handleSelectConversation} />
       </div>
@@ -106,7 +96,6 @@ function AppContent() {
         onNavigateToGroupChat={handleNavigateToGroupChat}
         onNavigateToPrivateMessages={handleNavigateToPrivateMessages}
         onLogout={handleLogout}
-        onNavigateToAdmin={handleNavigateToAdmin}
       />
       <MessagingInterface />
     </div>
@@ -115,9 +104,11 @@ function AppContent() {
 
 function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </QueryClientProvider>
   );
 }
 

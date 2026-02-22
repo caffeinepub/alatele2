@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-password-field-from-login-page-implement-username-only-authentication-where-users-enter-only-their-username-to-log-in",
-      "featureTitle": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
+      "featureId": "feature-remove-the-profile-picture-upload-component-from-the-login-profile-setup-flow-in-loginpage-tsx",
+      "featureTitle": "Remove the profile picture upload component from the login/profile setup flow in LoginPage.tsx",
       "files": [
-        "frontend/src/components/DualLoginPage.tsx",
-        "frontend/src/hooks/useAuth.ts"
+        "frontend/src/components/LoginPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -23,32 +22,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-allow-guests-to-login-with-any-username-except-alaie-prevent-guests-from-using-the-reserved-admin-username",
-      "featureTitle": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
+      "featureId": "feature-update-the-user-profile-mutation-hook-to-send-null-or-empty-string-for-profilepicture-when-creating-profiles",
+      "featureTitle": "Update the user profile mutation hook to send null or empty string for profilePicture when creating profiles",
       "files": [
-        "frontend/src/components/DualLoginPage.tsx",
-        "frontend/src/contexts/LanguageContext.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-restrict-admin-login-to-username-alaie-only-admins-can-only-login-when-username-is-exactly-alaie",
-      "featureTitle": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
-      "files": [
-        "frontend/src/components/DualLoginPage.tsx",
-        "frontend/src/hooks/useAuth.ts"
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -61,27 +38,6 @@
       ],
       "testIds": [
         "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-display-name-field-in-login-page-for-admins-only-show-display-name-input-field-when-username-is-alaie-to-allow-admins-to-set-their-display-name-during-login",
-      "featureTitle": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
-      "files": [
-        "frontend/src/components/DualLoginPage.tsx",
-        "frontend/src/contexts/LanguageContext.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
       ],
       "confidence": "high"
     }

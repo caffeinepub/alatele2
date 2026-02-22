@@ -17,16 +17,16 @@ export default function LanguageToggle() {
         <Button variant="ghost" size="sm" className="gap-2">
           <Globe className="w-4 h-4" />
           <span className="hidden sm:inline">
-            {language === 'fa-IR' ? 'فارسی' : 'English'}
+            {language === 'fa' ? 'فارسی' : 'English'}
           </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setLanguage('en-US')}>
-          {t('language.english')}
+        <DropdownMenuItem onClick={() => setLanguage('en')}>
+          English
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLanguage('fa-IR')}>
-          {t('language.farsi')}
+        <DropdownMenuItem onClick={() => setLanguage('fa')}>
+          فارسی
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

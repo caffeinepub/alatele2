@@ -1,6 +1,163 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Language = 'en-US' | 'fa-IR';
+type Language = 'en' | 'fa';
+
+interface Translations {
+  [key: string]: string | Translations;
+}
+
+const translations: Record<Language, Translations> = {
+  en: {
+    app: {
+      name: 'Alatele',
+      tagline: 'Secure messaging platform',
+    },
+    login: {
+      admin: {
+        title: 'Admin Login',
+        description: 'Login with your admin credentials',
+        username: 'Username',
+        usernamePlaceholder: 'Enter your username',
+        password: 'Password',
+        passwordPlaceholder: 'Enter your password',
+        passwordRequired: 'Password is required',
+        displayName: 'Display Name',
+        displayNameOptional: '(optional)',
+        displayNamePlaceholder: 'Enter display name',
+        button: 'Login as Admin',
+        loggingIn: 'Logging in...',
+        errorRequired: 'Username is required',
+        errorInvalid: 'Invalid credentials',
+      },
+      guest: {
+        title: 'Guest Access',
+        description: 'Quick access for guests',
+        button: 'Continue as Guest',
+        info: 'No password required - just enter a username',
+        features: 'Guest Features',
+        feature1: 'Send messages to admins',
+        feature2: 'View public messages',
+        feature3: 'Simple username-only access',
+        reservedUsernameError: 'This username is reserved for admin only',
+        usernameTakenError: 'Username already taken',
+      },
+    },
+    username: {
+      title: 'Enter your username',
+      placeholder: 'Choose a username',
+      button: 'Continue',
+    },
+    header: {
+      logout: 'Logout',
+      adminPanel: 'Admin Panel',
+    },
+    chat: {
+      groupChat: 'Group Chat',
+      privateMessages: 'Private Messages',
+      placeholder: 'Type a message...',
+      send: 'Send',
+      noMessages: 'No messages yet',
+      startConversation: 'Start a conversation',
+    },
+    adminPanel: {
+      title: 'Admin Panel',
+      contacts: 'Manage Contacts',
+      settings: 'Settings',
+      changePassword: 'Change Password',
+      currentPassword: 'Current Password',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm New Password',
+      updatePassword: 'Update Password',
+      passwordUpdated: 'Password updated successfully',
+      passwordError: 'Failed to update password',
+      passwordMismatch: 'Passwords do not match',
+      passwordTooShort: 'Password must be at least 6 characters',
+    },
+    contacts: {
+      title: 'Contact Manager',
+      myContacts: 'My Contacts',
+      availableUsers: 'Available Users',
+      addContact: 'Add Contact',
+      noContacts: 'No contacts yet',
+      noUsers: 'No available users',
+    },
+  },
+  fa: {
+    app: {
+      name: 'آلاتله',
+      tagline: 'پلتفرم پیام‌رسانی امن',
+    },
+    login: {
+      admin: {
+        title: 'ورود مدیر',
+        description: 'با اطلاعات مدیریتی خود وارد شوید',
+        username: 'نام کاربری',
+        usernamePlaceholder: 'نام کاربری خود را وارد کنید',
+        password: 'رمز عبور',
+        passwordPlaceholder: 'رمز عبور خود را وارد کنید',
+        passwordRequired: 'رمز عبور الزامی است',
+        displayName: 'نام نمایشی',
+        displayNameOptional: '(اختیاری)',
+        displayNamePlaceholder: 'نام نمایشی را وارد کنید',
+        button: 'ورود به عنوان مدیر',
+        loggingIn: 'در حال ورود...',
+        errorRequired: 'نام کاربری الزامی است',
+        errorInvalid: 'اطلاعات نامعتبر است',
+      },
+      guest: {
+        title: 'دسترسی مهمان',
+        description: 'دسترسی سریع برای مهمانان',
+        button: 'ادامه به عنوان مهمان',
+        info: 'بدون نیاز به رمز عبور - فقط نام کاربری وارد کنید',
+        features: 'امکانات مهمان',
+        feature1: 'ارسال پیام به مدیران',
+        feature2: 'مشاهده پیام‌های عمومی',
+        feature3: 'دسترسی ساده با نام کاربری',
+        reservedUsernameError: 'این نام کاربری برای مدیر رزرو شده است',
+        usernameTakenError: 'نام کاربری قبلاً استفاده شده است',
+      },
+    },
+    username: {
+      title: 'نام کاربری خود را وارد کنید',
+      placeholder: 'یک نام کاربری انتخاب کنید',
+      button: 'ادامه',
+    },
+    header: {
+      logout: 'خروج',
+      adminPanel: 'پنل مدیریت',
+    },
+    chat: {
+      groupChat: 'گفتگوی گروهی',
+      privateMessages: 'پیام‌های خصوصی',
+      placeholder: 'پیام خود را بنویسید...',
+      send: 'ارسال',
+      noMessages: 'هنوز پیامی وجود ندارد',
+      startConversation: 'گفتگو را شروع کنید',
+    },
+    adminPanel: {
+      title: 'پنل مدیریت',
+      contacts: 'مدیریت مخاطبین',
+      settings: 'تنظیمات',
+      changePassword: 'تغییر رمز عبور',
+      currentPassword: 'رمز عبور فعلی',
+      newPassword: 'رمز عبور جدید',
+      confirmPassword: 'تأیید رمز عبور جدید',
+      updatePassword: 'به‌روزرسانی رمز عبور',
+      passwordUpdated: 'رمز عبور با موفقیت به‌روزرسانی شد',
+      passwordError: 'خطا در به‌روزرسانی رمز عبور',
+      passwordMismatch: 'رمزهای عبور مطابقت ندارند',
+      passwordTooShort: 'رمز عبور باید حداقل ۶ کاراکتر باشد',
+    },
+    contacts: {
+      title: 'مدیریت مخاطبین',
+      myContacts: 'مخاطبین من',
+      availableUsers: 'کاربران موجود',
+      addContact: 'افزودن مخاطب',
+      noContacts: 'هنوز مخاطبی وجود ندارد',
+      noUsers: 'کاربر موجودی وجود ندارد',
+    },
+  },
+};
 
 interface LanguageContextType {
   language: Language;
@@ -8,215 +165,33 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-const translations = {
-  'en-US': {
-    'app.name': 'Alatele',
-    'app.tagline': 'Choose how you want to join',
-    'app.loading': 'Loading messages...',
-    'app.noMessages': 'No messages yet.',
-    'app.beFirst': 'Be the first to say hello!',
-    'login.admin.title': 'Admin Login',
-    'login.admin.description': 'Login with administrator credentials',
-    'login.admin.username': 'Username',
-    'login.admin.displayName': 'Display Name',
-    'login.admin.displayNameOptional': '(Optional)',
-    'login.admin.usernamePlaceholder': 'Enter username',
-    'login.admin.displayNamePlaceholder': 'Enter display name',
-    'login.admin.button': 'Login as Admin',
-    'login.admin.loggingIn': 'Logging in...',
-    'login.admin.errorRequired': 'Username is required',
-    'login.admin.errorInvalid': 'Invalid username',
-    'login.guest.title': 'Guest Login',
-    'login.guest.description': 'Join the conversation as a guest',
-    'login.guest.info': 'No password required. Just choose a username and start chatting!',
-    'login.guest.button': 'Continue as Guest',
-    'login.guest.features': 'Guest Features',
-    'login.guest.feature1': 'Send text messages',
-    'login.guest.feature2': 'Share images and videos',
-    'login.guest.feature3': 'Send audio messages',
-    'login.guest.reservedUsernameError': 'Username "Alaie" is reserved for admin only',
-    'login.guest.usernameTakenError': 'Username is already taken',
-    'username.title': 'Enter a username to join the conversation',
-    'username.placeholder': 'Choose your username...',
-    'username.button': 'Enter Chat',
-    'header.loggedInAs': 'Logged in as',
-    'header.logout': 'Logout',
-    'message.placeholder': 'Type a message...',
-    'message.send': 'Send',
-    'message.edit': 'Edit',
-    'message.delete': 'Delete',
-    'message.cancel': 'Cancel',
-    'message.save': 'Save',
-    'message.uploading': 'Uploading...',
-    'message.sharedImage': 'Shared image',
-    'message.videoNotSupported': 'Your browser does not support the video tag.',
-    'message.audioNotSupported': 'Your browser does not support the audio tag.',
-    'message.fileAttached': 'File attached',
-    'audio.record': 'Record Audio',
-    'audio.recording': 'Recording...',
-    'audio.audioMessage': 'Audio Message',
-    'audio.permissionError': 'Microphone access denied. Please allow microphone access to record audio.',
-    'admin.panel': 'Admin Panel',
-    'admin.backToChat': 'Back to Chat',
-    'admin.backToPanel': 'Back to Panel',
-    'admin.accessDenied': 'Access Denied',
-    'admin.accessDeniedMessage': 'You do not have permission to access the admin panel. Only administrators can view this page.',
-    'admin.title': 'Admin Dashboard',
-    'admin.description': 'Manage messages and view analytics',
-    'admin.password.title': 'Password Settings',
-    'admin.password.manage': 'Change Password',
-    'admin.password.changeTitle': 'Change Admin Password',
-    'admin.password.changeDescription': 'Update your administrator password for enhanced security',
-    'admin.password.current': 'Current Password',
-    'admin.password.currentPlaceholder': 'Enter current password',
-    'admin.password.new': 'New Password',
-    'admin.password.newPlaceholder': 'Enter new password',
-    'admin.password.confirm': 'Confirm New Password',
-    'admin.password.confirmPlaceholder': 'Confirm new password',
-    'admin.password.changeButton': 'Change Password',
-    'admin.password.changing': 'Changing...',
-    'admin.password.errorRequired': 'All fields are required',
-    'admin.password.errorMismatch': 'New passwords do not match',
-    'admin.password.errorTooShort': 'Password must be at least 6 characters long',
-    'admin.password.errorGeneric': 'Failed to change password. Please try again.',
-    'admin.password.success': 'Password changed successfully!',
-    'language.english': 'English',
-    'language.farsi': 'فارسی',
-    'language.switch': 'Switch Language',
-    'chat.groupChat': 'Group Chat',
-    'chat.privateMessages': 'Private Messages',
-    'chat.privateConversation': 'Private Conversation',
-    'chat.noConversations': 'No conversations yet',
-    'chat.noConversationsAdmin': 'Add contacts to start private conversations',
-    'chat.noConversationsGuest': 'Wait for an admin to add you as a contact',
-    'chat.conversationsDescription': 'Your private conversations',
-    'chat.mediaMessage': 'Media message',
-    'contacts.manage': 'Manage Contacts',
-    'contacts.manageDescription': 'Add and manage your contacts for private messaging',
-    'contacts.myContacts': 'My Contacts',
-    'contacts.myContactsDescription': 'Users you can send private messages to',
-    'contacts.noContacts': 'No contacts yet. Add users below to start private conversations.',
-    'contacts.addContacts': 'Add Contacts',
-    'contacts.addContactsDescription': 'Select users to add as contacts',
-    'contacts.noAvailableUsers': 'All available users have been added as contacts.',
-    'contacts.add': 'Add',
-    'contacts.adding': 'Adding...',
-  },
-  'fa-IR': {
-    'app.name': 'آلاتله',
-    'app.tagline': 'نحوه ورود خود را انتخاب کنید',
-    'app.loading': 'در حال بارگذاری پیام‌ها...',
-    'app.noMessages': 'هنوز پیامی وجود ندارد.',
-    'app.beFirst': 'اولین نفری باشید که سلام می‌کند!',
-    'login.admin.title': 'ورود مدیر',
-    'login.admin.description': 'ورود با اطلاعات مدیریتی',
-    'login.admin.username': 'نام کاربری',
-    'login.admin.displayName': 'نام نمایشی',
-    'login.admin.displayNameOptional': '(اختیاری)',
-    'login.admin.usernamePlaceholder': 'نام کاربری را وارد کنید',
-    'login.admin.displayNamePlaceholder': 'نام نمایشی را وارد کنید',
-    'login.admin.button': 'ورود به عنوان مدیر',
-    'login.admin.loggingIn': 'در حال ورود...',
-    'login.admin.errorRequired': 'نام کاربری الزامی است',
-    'login.admin.errorInvalid': 'نام کاربری نامعتبر است',
-    'login.guest.title': 'ورود مهمان',
-    'login.guest.description': 'به عنوان مهمان به گفتگو بپیوندید',
-    'login.guest.info': 'نیازی به رمز عبور نیست. فقط یک نام کاربری انتخاب کنید و شروع به چت کنید!',
-    'login.guest.button': 'ادامه به عنوان مهمان',
-    'login.guest.features': 'امکانات مهمان',
-    'login.guest.feature1': 'ارسال پیام متنی',
-    'login.guest.feature2': 'اشتراک‌گذاری تصاویر و ویدیوها',
-    'login.guest.feature3': 'ارسال پیام صوتی',
-    'login.guest.reservedUsernameError': 'نام کاربری "Alaie" برای مدیر رزرو شده است',
-    'login.guest.usernameTakenError': 'این نام کاربری قبلاً استفاده شده است',
-    'username.title': 'برای پیوستن به گفتگو نام کاربری وارد کنید',
-    'username.placeholder': 'نام کاربری خود را انتخاب کنید...',
-    'username.button': 'ورود به چت',
-    'header.loggedInAs': 'وارد شده به عنوان',
-    'header.logout': 'خروج',
-    'message.placeholder': 'پیام خود را بنویسید...',
-    'message.send': 'ارسال',
-    'message.edit': 'ویرایش',
-    'message.delete': 'حذف',
-    'message.cancel': 'لغو',
-    'message.save': 'ذخیره',
-    'message.uploading': 'در حال بارگذاری...',
-    'message.sharedImage': 'تصویر اشتراک‌گذاری شده',
-    'message.videoNotSupported': 'مرورگر شما از برچسب ویدیو پشتیبانی نمی‌کند.',
-    'message.audioNotSupported': 'مرورگر شما از برچسب صوتی پشتیبانی نمی‌کند.',
-    'message.fileAttached': 'فایل پیوست شده',
-    'audio.record': 'ضبط صدا',
-    'audio.recording': 'در حال ضبط...',
-    'audio.audioMessage': 'پیام صوتی',
-    'audio.permissionError': 'دسترسی به میکروفون رد شد. لطفاً برای ضبط صدا، دسترسی به میکروفون را مجاز کنید.',
-    'admin.panel': 'پنل مدیریت',
-    'admin.backToChat': 'بازگشت به چت',
-    'admin.backToPanel': 'بازگشت به پنل',
-    'admin.accessDenied': 'دسترسی رد شد',
-    'admin.accessDeniedMessage': 'شما مجوز دسترسی به پنل مدیریت را ندارید. فقط مدیران می‌توانند این صفحه را مشاهده کنند.',
-    'admin.title': 'داشبورد مدیریت',
-    'admin.description': 'مدیریت پیام‌ها و مشاهده تحلیل‌ها',
-    'admin.password.title': 'تنظیمات رمز عبور',
-    'admin.password.manage': 'تغییر رمز عبور',
-    'admin.password.changeTitle': 'تغییر رمز عبور مدیر',
-    'admin.password.changeDescription': 'برای امنیت بیشتر، رمز عبور مدیریتی خود را به‌روزرسانی کنید',
-    'admin.password.current': 'رمز عبور فعلی',
-    'admin.password.currentPlaceholder': 'رمز عبور فعلی را وارد کنید',
-    'admin.password.new': 'رمز عبور جدید',
-    'admin.password.newPlaceholder': 'رمز عبور جدید را وارد کنید',
-    'admin.password.confirm': 'تأیید رمز عبور جدید',
-    'admin.password.confirmPlaceholder': 'رمز عبور جدید را تأیید کنید',
-    'admin.password.changeButton': 'تغییر رمز عبور',
-    'admin.password.changing': 'در حال تغییر...',
-    'admin.password.errorRequired': 'همه فیلدها الزامی هستند',
-    'admin.password.errorMismatch': 'رمزهای عبور جدید مطابقت ندارند',
-    'admin.password.errorTooShort': 'رمز عبور باید حداقل ۶ کاراکتر باشد',
-    'admin.password.errorGeneric': 'تغییر رمز عبور ناموفق بود. لطفاً دوباره تلاش کنید.',
-    'admin.password.success': 'رمز عبور با موفقیت تغییر یافت!',
-    'language.english': 'English',
-    'language.farsi': 'فارسی',
-    'language.switch': 'تغییر زبان',
-    'chat.groupChat': 'چت گروهی',
-    'chat.privateMessages': 'پیام‌های خصوصی',
-    'chat.privateConversation': 'گفتگوی خصوصی',
-    'chat.noConversations': 'هنوز گفتگویی وجود ندارد',
-    'chat.noConversationsAdmin': 'برای شروع گفتگوهای خصوصی، مخاطبین را اضافه کنید',
-    'chat.noConversationsGuest': 'منتظر بمانید تا یک مدیر شما را به عنوان مخاطب اضافه کند',
-    'chat.conversationsDescription': 'گفتگوهای خصوصی شما',
-    'chat.mediaMessage': 'پیام رسانه‌ای',
-    'contacts.manage': 'مدیریت مخاطبین',
-    'contacts.manageDescription': 'افزودن و مدیریت مخاطبین برای پیام‌رسانی خصوصی',
-    'contacts.myContacts': 'مخاطبین من',
-    'contacts.myContactsDescription': 'کاربرانی که می‌توانید به آن‌ها پیام خصوصی ارسال کنید',
-    'contacts.noContacts': 'هنوز مخاطبی وجود ندارد. کاربران زیر را اضافه کنید تا گفتگوهای خصوصی را شروع کنید.',
-    'contacts.addContacts': 'افزودن مخاطبین',
-    'contacts.addContactsDescription': 'کاربران را برای افزودن به عنوان مخاطب انتخاب کنید',
-    'contacts.noAvailableUsers': 'همه کاربران موجود به عنوان مخاطب اضافه شده‌اند.',
-    'contacts.add': 'افزودن',
-    'contacts.adding': 'در حال افزودن...',
-  },
-};
-
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    const stored = localStorage.getItem('alatele2_language');
-    return (stored as Language) || 'en-US';
+  const [language, setLanguage] = useState<Language>(() => {
+    const stored = localStorage.getItem('alatele_language');
+    return (stored === 'fa' || stored === 'en') ? stored : 'en';
   });
 
   useEffect(() => {
-    localStorage.setItem('alatele2_language', language);
-    document.documentElement.dir = language === 'fa-IR' ? 'rtl' : 'ltr';
-    document.documentElement.lang = language;
+    localStorage.setItem('alatele_language', language);
+    document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr';
+    document.documentElement.lang = language === 'fa' ? 'fa' : 'en';
   }, [language]);
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-  };
-
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations['en-US']] || key;
+    const keys = key.split('.');
+    let value: any = translations[language];
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object') {
+        value = value[k];
+      } else {
+        return key;
+      }
+    }
+    
+    return typeof value === 'string' ? value : key;
   };
 
   return (
@@ -228,8 +203,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+  if (!context) {
+    throw new Error('useLanguage must be used within LanguageProvider');
   }
   return context;
 }

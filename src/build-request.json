@@ -1,116 +1,66 @@
 {
   "kind": "build_request",
-  "title": "Remove password authentication and implement username-only login with admin display name support",
-  "projectName": "Alatele Chat",
+  "title": "Remove profile picture upload from login screen",
+  "projectName": "Alatele",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove password field from login page - implement username-only authentication where users enter only their username to log in",
-      "target": "both",
+      "text": "Remove the profile picture upload component from the login/profile setup flow in LoginPage.tsx",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-remove-password"
+          "msg-20"
         ],
         "quotes": [
-          "رمز عبور حذف شود"
+          "قابلیت آپلود عکس پروفایل را حذف کن"
         ]
       },
       "acceptanceCriteria": [
-        "Login page displays only username input field, no password field",
-        "Users can successfully authenticate with username only",
-        "Backend authentication logic updated to validate username without password"
+        "The ProfilePictureUpload component is no longer rendered in LoginPage.tsx",
+        "Users can complete login by entering only their display name",
+        "No profile picture field is visible during the setup flow"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Allow guests to login with any username except 'Alaie' - prevent guests from using the reserved admin username",
-      "target": "both",
+      "text": "Update the backend createProfile method to accept only displayName without requiring profilePicture",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-guest-rules"
-        ],
-        "quotes": [
-          "برای مهمان هرچیزی باشه",
-          "مهمان‌ها: نام کاربری می‌تواند هر چیزی باشد (به جز 'Alaie')"
+          "msg-20"
         ]
       },
       "acceptanceCriteria": [
-        "Guest users can login with any username that is not 'Alaie'",
-        "Attempting to login as guest with username 'Alaie' is blocked with appropriate error message",
-        "Backend validates that 'Alaie' username is reserved for admin access only"
+        "The createProfile function in main.mo accepts a null or empty profilePicture field",
+        "User profiles can be created without a profile picture",
+        "Existing profiles with pictures remain unchanged"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Restrict admin login to username 'Alaie' only - admins can only login when username is exactly 'Alaie'",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-admin-rules"
-        ],
-        "quotes": [
-          "برای مدیران فقط Alaie باشد",
-          "فقط با نام کاربری 'Alaie' می‌توانند وارد شوند"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin role is automatically assigned when username is 'Alaie'",
-        "Admin features and permissions are only available to users logged in as 'Alaie'",
-        "Backend role detection logic identifies admin based solely on username being 'Alaie'"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add Display Name field in login page for admins only - show display name input field when username is 'Alaie' to allow admins to set their display name during login",
+      "text": "Update the user profile mutation hook to send null or empty string for profilePicture when creating profiles",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-display-name-login"
-        ],
-        "quotes": [
-          "برای مدیران نیز قسمت display  در قسمت ورودی بزار تا با  آن اسمشان را در چت و کنار پیام و پروفایل تغییر بدن"
+          "msg-20"
         ]
       },
       "acceptanceCriteria": [
-        "Display Name input field appears on login page when username entered is 'Alaie'",
-        "Display Name field is hidden for all other usernames (guest login)",
-        "Admin can set their display name during login which is saved to their profile",
-        "Display Name is optional - admin can login without entering it"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Display admin's Display Name in chat messages, profile, and conversation list - show the admin's chosen display name instead of username 'Alaie' throughout the application",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-display-name-usage"
-        ],
-        "quotes": [
-          "با  آن اسمشان را در چت و کنار پیام و پروفایل تغییر بدن"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin's display name appears next to their messages in chat interface",
-        "Admin's display name is shown in their profile view",
-        "Admin's display name appears in conversation list",
-        "If no display name is set, fall back to showing username 'Alaie'"
+        "The profile creation mutation in useQueries.ts does not include profilePicture data",
+        "Profile creation succeeds without uploading an image"
       ]
     }
   ],
   "constraints": [
-    "Maintain existing admin role detection and permissions system",
-    "Preserve existing message history and user profiles during authentication changes",
-    "Keep backend single-actor architecture in main.mo",
-    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui"
+    "Do not remove the profilePicture field from existing user profiles in the backend",
+    "Preserve the ProfilePictureUpload.tsx component file for potential future use",
+    "Maintain compatibility with existing profiles that have profile pictures"
   ],
   "nonGoals": [
-    "Adding password recovery or reset functionality",
-    "Implementing multi-factor authentication",
-    "Creating user registration or signup flow",
-    "Adding ability for guests to set display names",
-    "Allowing admins to use usernames other than 'Alaie'"
+    "Removing profile pictures from the chat interface or user avatars",
+    "Deleting existing profile pictures from user accounts",
+    "Modifying the profile picture display logic in other components"
   ],
   "imageRequirements": {
     "required": [],

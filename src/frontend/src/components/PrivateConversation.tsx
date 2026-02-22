@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, LogOut, Shield } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ArrowLeft, LogOut } from 'lucide-react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { usePrivateMessages } from '../hooks/usePrivateMessages';
-import { useAuth } from '../hooks/useAuth';
-import { useUserProfile } from '../hooks/useContacts';
-import { ExternalBlob } from '../backend';
+import { useGetUserProfile } from '../hooks/useQueries';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Principal } from '@dfinity/principal';
 import LanguageToggle from './LanguageToggle';
@@ -15,18 +14,15 @@ interface PrivateConversationProps {
   contact: Principal;
   onBack: () => void;
   onLogout: () => void;
-  onNavigateToAdmin: () => void;
 }
 
 export default function PrivateConversation({ 
   contact, 
   onBack, 
-  onLogout, 
-  onNavigateToAdmin 
+  onLogout 
 }: PrivateConversationProps) {
-  const { displayName, isAdmin } = useAuth();
   const { messages, isLoading, sendPrivateMessage, isSending } = usePrivateMessages(contact);
-  const { userProfile } = useUserProfile(contact);
+  const { data: userProfile } = useGetUserProfile(contact);
   const { t } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const previousMessageCountRef = useRef(messages.length);
@@ -42,13 +38,16 @@ export default function PrivateConversation({
     previousMessageCountRef.current = messages.length;
   }, [messages.length]);
 
-  const handleSendMessage = async (content: string, image?: ExternalBlob, video?: ExternalBlob, audio?: ExternalBlob, file?: ExternalBlob) => {
-    await sendPrivateMessage(content, image, video, audio, file);
+  const handleSendMessage = async (content: string) => {
+    await sendPrivateMessage(content);
     setTimeout(scrollToBottom, 100);
   };
 
-  const contactDisplayName = userProfile?.displayName || userProfile?.name || contact.toString().slice(0, 8);
-  const contactUsername = userProfile?.name || contact.toString().slice(0, 8);
+  const getInitials = (name: string) => {
+    return name.slice(0, 2).toUpperCase();
+  };
+
+  const contactName = userProfile?.displayName || contact.toString().slice(0, 8);
 
   if (isLoading) {
     return (
@@ -70,31 +69,26 @@ export default function PrivateConversation({
               <Button variant="ghost" size="sm" onClick={onBack}>
                 <ArrowLeft className="w-4 h-4" />
               </Button>
-              <div>
-                {userProfile?.displayName && (
-                  <h1 className="text-xl font-bold tracking-tight">{contactDisplayName}</h1>
+              <Avatar className="w-10 h-10">
+                {userProfile?.profilePicture ? (
+                  <AvatarImage 
+                    src={userProfile.profilePicture.getDirectURL()} 
+                    alt={contactName} 
+                  />
+                ) : (
+                  <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                    {getInitials(contactName)}
+                  </AvatarFallback>
                 )}
-                <p className={userProfile?.displayName ? 'text-xs text-muted-foreground' : 'text-xl font-bold tracking-tight'}>
-                  {contactUsername}
-                </p>
+              </Avatar>
+              <div>
+                <h1 className="text-xl font-bold tracking-tight">{contactName}</h1>
                 <p className="text-xs text-muted-foreground">{t('chat.privateConversation')}</p>
               </div>
             </div>
             
             <div className="flex items-center gap-2">
               <LanguageToggle />
-              
-              {isAdmin && (
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={onNavigateToAdmin}
-                  className="gap-2"
-                >
-                  <Shield className="w-4 h-4" />
-                  <span className="hidden sm:inline">{t('admin.panel')}</span>
-                </Button>
-              )}
               
               <Button 
                 variant="ghost" 
@@ -111,7 +105,7 @@ export default function PrivateConversation({
       </header>
       
       <main className="flex-1 overflow-y-auto px-4 py-6">
-        <MessageList messages={messages} currentUsername={displayName || ''} />
+        <MessageList messages={messages} />
         <div ref={messagesEndRef} />
       </main>
 
